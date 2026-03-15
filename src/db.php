@@ -1,15 +1,10 @@
 <?php
-// -------------------------------------------------------
-// Supabase PostgreSQL connection
-// Fill in your credentials from:
-// Supabase Dashboard → Project Settings → Database
-// -------------------------------------------------------
-
-$DB_HOST = 'db.pnuijwzntgizsfmpkauz.supabase.co';
+// Supabase Session Pooler (IPv4 compatible)
+$DB_HOST = 'aws-1-eu-west-1.pooler.supabase.com';
 $DB_PORT = '5432';
 $DB_NAME = 'postgres';
-$DB_USER = 'postgres';
-$DB_PASS = 'ThisIsNemesisDatabase343999'; // still need this          // the password you set when creating the project
+$DB_USER = 'postgres.pnuijwzntgizsfmpkauz';
+$DB_PASS = 'ThisIsNemesisDatabase343999';
 
 try {
     $pdo = new PDO(
