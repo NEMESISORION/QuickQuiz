@@ -74,7 +74,7 @@ $xpProgress = ($xp % 500) / 500 * 100;
 $xpToNext = 500 - ($xp % 500);
 
 // Calculate streak (simplified - based on unique days)
-$stmt = $pdo->prepare("SELECT COUNT(DISTINCT DATE(taken_at)) as streak_days FROM results WHERE user_id = ? AND taken_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)");
+$stmt = $pdo->prepare("SELECT COUNT(DISTINCT DATE(taken_at)) as streak_days FROM results WHERE user_id = ? AND taken_at >= NOW() - INTERVAL '7 days'");
 $stmt->execute([$uid]);
 $streakData = $stmt->fetch(PDO::FETCH_ASSOC);
 $streak = $streakData['streak_days'] ?? 0;
