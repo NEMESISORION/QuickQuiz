@@ -123,7 +123,7 @@ if ($quizId > 0 && $quiz) {
          FROM quizzes q
          LEFT JOIN results r ON q.id = r.quiz_id
          WHERE q.created_by = ?
-         GROUP BY q.id
+         GROUP BY q.id, q.title
          ORDER BY attempts DESC
          LIMIT 5"
     );
@@ -150,7 +150,7 @@ if ($quizId > 0 && $quiz) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Analytics — QuickQuiz</title>
-  <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../assets/css/quickquiz.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

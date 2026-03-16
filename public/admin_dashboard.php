@@ -126,7 +126,7 @@ $stmt = $pdo->prepare(
      FROM quizzes q
      LEFT JOIN results r ON q.id = r.quiz_id
      WHERE q.created_by = ?
-     GROUP BY q.id
+     GROUP BY q.id, q.title
      ORDER BY attempts DESC
      LIMIT 7"
 );
@@ -140,7 +140,7 @@ $stmt = $pdo->prepare(
      JOIN users u ON r.user_id = u.id
      JOIN quizzes q ON r.quiz_id = q.id
      WHERE q.created_by = ?
-     GROUP BY r.user_id
+     GROUP BY r.user_id, u.username
      ORDER BY total_score DESC
      LIMIT 5"
 );
@@ -157,7 +157,7 @@ $avatarColors = ['#7c3aed', '#0d9488', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard — QuickQuiz Admin</title>
-  <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../assets/css/quickquiz.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <link rel="manifest" href="manifest.json">
