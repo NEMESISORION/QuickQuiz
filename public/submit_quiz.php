@@ -110,11 +110,11 @@ $xpEarned = round($earnedPoints * 10);
 // Save to results with new fields
 $answersJson = json_encode($answers);
 $stmt = $pdo->prepare(
-    "INSERT INTO results (user_id, quiz_id, score, total_points, correct_count, wrong_count, time_taken, passed, answers_json) 
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    "INSERT INTO results (user_id, quiz_id, score, total_points, correct_count, wrong_count, time_taken, passed, answers_json)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id"
 );
 $stmt->execute([$uid, $quiz_id, $earnedPoints, $totalPoints, $correctCount, $wrongCount, $timeTaken, $passed, $answersJson]);
-$resultId = $pdo->lastInsertId();
+$resultId = $stmt->fetchColumn();
 
 // Get user's previous best
 $stmt = $pdo->prepare("SELECT MAX(score) as best FROM results WHERE user_id = ? AND quiz_id = ? AND id != ?");

@@ -39,12 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Create user with secure password hash
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $hashedAdminCode = ($role === 'admin' && $admin_code) ? password_hash($admin_code, PASSWORD_DEFAULT) : null;
-            $stmt = $pdo->prepare("INSERT INTO users (username, password, role, admin_code) VALUES (?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO users (username, password, role, admin_code) VALUES (?, ?, ?, ?) RETURNING id");
             $stmt->execute([$username, $hashedPassword, $role, $hashedAdminCode]);
-            
+            $newUserId = $stmt->fetchColumn();
+
             // Auto-login for students with redirect
             if ($role === 'student' && !empty($redirect)) {
-                $newUserId = $pdo->lastInsertId();
                 $_SESSION['user_id'] = $newUserId;
                 $_SESSION['role'] = $role;
                 $_SESSION['username'] = $username;

@@ -41,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $timeLimit = intval($_POST['time_limit'] ?? 0);
     if ($title === '') $error = "Title required";
     if (!$error) {
-        $stmt = $pdo->prepare("INSERT INTO quizzes (title, description, time_limit, created_by) VALUES (?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO quizzes (title, description, time_limit, created_by) VALUES (?, ?, ?, ?) RETURNING id");
         $stmt->execute([$title, $desc, $timeLimit, $adminId]);
-        $id = $pdo->lastInsertId();
+        $id = $stmt->fetchColumn();
         header("Location: admin_edit_quiz.php?id=$id");
         exit;
     }
