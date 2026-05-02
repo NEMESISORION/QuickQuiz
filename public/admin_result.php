@@ -13,19 +13,22 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!doctype html><html><head>
   <meta charset="utf-8"><title>Results</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-</head><body class="container mt-4">
-  <a href="admin_dashboard.php" class="btn btn-secondary mb-3">Back</a>
-  <h3>Results for Quiz #<?= $quiz_id ?></h3>
-  <table class="table">
-    <thead><tr><th>User</th><th>Score</th><th>When</th></tr></thead>
-    <tbody>
-      <?php foreach ($results as $r): ?>
-        <tr>
-          <td><?=htmlspecialchars($r['username'])?></td>
-          <td><?=htmlspecialchars($r['score'])?></td>
-          <td><?=htmlspecialchars($r['taken_at'])?></td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head><body>
+  <div style="padding: 24px; max-width: 1000px;">
+    <a href="admin_dashboard.php" class="btn btn-secondary mb-3" style="margin-bottom: 24px;">← Back</a>
+    <h3 style="margin-bottom: 24px;">Results for Quiz #<?= $quiz_id ?></h3>
+    <table class="table">
+      <thead><tr><th>User</th><th>Score</th><th>When</th></tr></thead>
+      <tbody>
+        <?php foreach ($results as $r): ?>
+          <tr>
+            <td><?=htmlspecialchars($r['username'])?></td>
+            <td><?=htmlspecialchars($r['score'])?></td>
+            <td><?=htmlspecialchars($r['taken_at'])?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
 </body></html>

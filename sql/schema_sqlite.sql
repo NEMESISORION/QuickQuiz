@@ -7,12 +7,12 @@ DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS migrations;
 DROP TABLE IF EXISTS users;
 
-CREATE TABLE IF NOT EXISTS migrations (
+CREATE TABLE migrations (
     version INTEGER DEFAULT 0
 );
 INSERT INTO migrations (version) VALUES (1);
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
@@ -22,10 +22,10 @@ CREATE TABLE IF NOT EXISTS users (
     created_by_admin INTEGER DEFAULT NULL,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
-CREATE INDEX IF NOT EXISTS idx_users_created_by ON users(created_by_admin);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_created_by ON users(created_by_admin);
 
-CREATE TABLE IF NOT EXISTS quizzes (
+CREATE TABLE quizzes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     description TEXT,
@@ -42,11 +42,11 @@ CREATE TABLE IF NOT EXISTS quizzes (
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
-CREATE INDEX IF NOT EXISTS idx_quizzes_created_by ON quizzes(created_by);
-CREATE INDEX IF NOT EXISTS idx_quizzes_published ON quizzes(is_published);
-CREATE INDEX IF NOT EXISTS idx_quizzes_dates ON quizzes(start_date, end_date);
+CREATE INDEX idx_quizzes_created_by ON quizzes(created_by);
+CREATE INDEX idx_quizzes_published ON quizzes(is_published);
+CREATE INDEX idx_quizzes_dates ON quizzes(start_date, end_date);
 
-CREATE TABLE IF NOT EXISTS questions (
+CREATE TABLE questions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     quiz_id INTEGER NOT NULL,
     question_text TEXT NOT NULL,
@@ -59,9 +59,9 @@ CREATE TABLE IF NOT EXISTS questions (
     points INTEGER DEFAULT 1,
     FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
 );
-CREATE INDEX IF NOT EXISTS idx_questions_quiz ON questions(quiz_id);
+CREATE INDEX idx_questions_quiz ON questions(quiz_id);
 
-CREATE TABLE IF NOT EXISTS results (
+CREATE TABLE results (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     quiz_id INTEGER NOT NULL,
@@ -76,10 +76,10 @@ CREATE TABLE IF NOT EXISTS results (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
 );
-CREATE INDEX IF NOT EXISTS idx_results_user ON results(user_id);
-CREATE INDEX IF NOT EXISTS idx_results_quiz ON results(quiz_id);
-CREATE INDEX IF NOT EXISTS idx_results_taken_at ON results(taken_at);
-CREATE INDEX IF NOT EXISTS idx_results_user_quiz ON results(user_id, quiz_id);
+CREATE INDEX idx_results_user ON results(user_id);
+CREATE INDEX idx_results_quiz ON results(quiz_id);
+CREATE INDEX idx_results_taken_at ON results(taken_at);
+CREATE INDEX idx_results_user_quiz ON results(user_id, quiz_id);
 
 -- Demo users (password is "1234")
 INSERT INTO users (username, password, role)
