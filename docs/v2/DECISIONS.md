@@ -4,7 +4,7 @@ This log records decisions that materially shape the rebuild. A decision is revi
 
 ## ADR-001: Controlled rebuild instead of incremental patching
 
-Status: Proposed for Round 0 acceptance
+Status: Accepted
 
 Decision:
 
@@ -22,7 +22,7 @@ The first rounds invest in foundations before feature parity. Legacy production 
 
 ## ADR-002: Laravel modular monolith
 
-Status: Proposed for Round 0 acceptance
+Status: Accepted
 
 Decision:
 
@@ -39,7 +39,7 @@ Composer becomes required. Framework and dependency versions will be locked in R
 
 ## ADR-003: Server-rendered UI with progressive enhancement
 
-Status: Proposed for Round 0 acceptance
+Status: Accepted
 
 Decision:
 
@@ -57,7 +57,7 @@ JSON endpoints remain available for autosave and real-time interactions, but are
 
 ## ADR-004: PostgreSQL production, SQLite-compatible tests
 
-Status: Proposed for Round 0 acceptance
+Status: Accepted
 
 Decision:
 
@@ -75,7 +75,7 @@ Migrations and queries must avoid accidental database-specific behavior or cover
 
 ## ADR-005: Product-owned accessible design system
 
-Status: Proposed for Round 0 acceptance
+Status: Accepted
 
 Decision:
 

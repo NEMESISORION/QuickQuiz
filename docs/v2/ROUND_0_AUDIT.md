@@ -1,6 +1,6 @@
 # QuickQuiz v2 — Round 0 Audit
 
-Status: In progress
+Status: Complete
 
 Branch: `v2-round-0-discovery`
 
@@ -80,6 +80,6 @@ Constraints:
 - [x] Target architecture documented.
 - [x] UX principles, information architecture, and design tokens documented.
 - [x] Delivery rounds and quality gates documented.
-- [ ] Architecture decision records reviewed and accepted.
-- [ ] Composer installation approach agreed before Round 1 scaffolding.
-- [ ] Round 0 documents committed and pushed.
+- [x] Architecture decision records reviewed and accepted.
+- [x] Repository-local PHP and Composer toolchain approach agreed for Round 1.
+- [x] Round 0 documents committed and pushed.

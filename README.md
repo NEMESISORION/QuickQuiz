@@ -4,7 +4,7 @@ QuickQuiz is being rebuilt as a modern assessment platform for educators and lea
 
 ## Current status
 
-QuickQuiz v2 is in **Round 0: Discovery and Specification** on the `v2-round-0-discovery` branch. The legacy PHP application remains available as a behavioral reference while the new architecture is defined and verified.
+QuickQuiz v2 has completed **Round 0: Discovery and Specification** and entered **Round 1: Application Foundation**. The legacy PHP application remains recoverable from Git history while the new Laravel foundation is established.
 
 ## v2 documentation
 
@@ -14,6 +14,7 @@ QuickQuiz v2 is in **Round 0: Discovery and Specification** on the `v2-round-0-d
 - [UX and design-system brief](docs/v2/UX_SYSTEM.md)
 - [Delivery rounds](docs/v2/DELIVERY_ROUNDS.md)
 - [Architecture decisions](docs/v2/DECISIONS.md)
+- [Round 1 foundation plan](docs/v2/ROUND_1_PLAN.md)
 
 ## Product direction
 

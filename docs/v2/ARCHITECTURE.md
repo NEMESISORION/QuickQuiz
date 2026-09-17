@@ -2,7 +2,7 @@
 
 ## Decision
 
-Build v2 as a Laravel-based modular monolith with server-rendered Blade views, Tailwind CSS, and Alpine.js for focused interactions. Use PostgreSQL in hosted environments and SQLite for fast automated tests where behavior is compatible.
+Build v2 as a Laravel 13 modular monolith running on PHP 8.5, with server-rendered Blade views, Tailwind CSS, and Alpine.js for focused interactions. Use PostgreSQL in hosted environments and SQLite for fast automated tests where behavior is compatible.
 
 This structure provides mature routing, validation, authentication, authorization, migrations, queues, events, and testing without introducing distributed-system complexity.
 
@@ -50,7 +50,7 @@ Important historical values—including question wording, selected options, poin
 
 ## Infrastructure choices
 
-- Laravel-supported PHP version selected during Round 1 after Composer is available.
+- Laravel 13 on PHP 8.5, with dependency versions locked by Composer.
 - PostgreSQL for persistent production data.
 - SQLite for local smoke tests and compatible automated tests.
 - Vite for frontend asset compilation.
