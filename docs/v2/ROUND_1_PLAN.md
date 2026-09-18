@@ -1,6 +1,6 @@
 # QuickQuiz v2 — Round 1 Foundation Plan
 
-Status: Split into focused checkpoints
+Status: Complete through Rounds 1A, 1B, and 1C
 
 ## Objective
 
