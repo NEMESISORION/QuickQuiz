@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Round 1A is hardening the environment and repository foundation. UI foundation work follows in Round 1B, and complete quality/delivery verification follows in Round 1C. Authentication begins after those foundation checkpoints. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Round 1C is completing the automated quality and delivery gates for the application foundation. Authentication begins after this checkpoint. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -31,10 +31,9 @@ Open `http://127.0.0.1:8000`. The application health check is available at `/up`
 ## Verification
 
 ```powershell
-composer run test
-composer run analyse
-composer run format:check
-npm run build
+composer run verify
+npm run check
+composer audit --locked
 ```
 
 ## v2 documentation
@@ -48,6 +47,7 @@ npm run build
 - [Round 1 foundation plan](docs/v2/ROUND_1_PLAN.md)
 - [Round 1A environment and repository plan](docs/v2/ROUND_1A_PLAN.md)
 - [Round 1B architecture and UI foundation](docs/v2/ROUND_1B_PLAN.md)
+- [Round 1C quality and delivery](docs/v2/ROUND_1C_PLAN.md)
 
 ## Product direction
 

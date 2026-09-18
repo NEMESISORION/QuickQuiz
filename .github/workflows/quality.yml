@@ -1,6 +1,7 @@
 name: Quality
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -18,6 +19,7 @@ jobs:
   backend:
     name: PHP quality
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Check out repository
@@ -41,9 +43,6 @@ jobs:
           touch database/database.sqlite
           php artisan migrate --force --no-interaction
 
-      - name: Validate Composer configuration
-        run: composer validate --strict
-
       - name: Verify cached application configuration
         run: |
           php artisan config:cache
@@ -51,28 +50,22 @@ jobs:
           php artisan config:clear
           php artisan route:clear
 
-      - name: Check formatting
-        run: vendor/bin/pint --test
-
-      - name: Run static analysis
-        run: vendor/bin/phpstan analyse --memory-limit=1G
-
-      - name: Run backend tests
+      - name: Verify backend
         shell: bash
         run: |
           set +e
-          test_output=$(vendor/bin/phpunit 2>&1)
-          test_status=$?
-          printf '%s\n' "$test_output"
+          verification_output=$(composer run verify 2>&1)
+          verification_status=$?
+          printf '%s\n' "$verification_output"
 
-          if [ "$test_status" -ne 0 ]; then
-            annotation=${test_output//'%'/'%25'}
+          if [ "$verification_status" -ne 0 ]; then
+            annotation=${verification_output//'%'/'%25'}
             annotation=${annotation//$'\r'/'%0D'}
             annotation=${annotation//$'\n'/'%0A'}
-            echo "::error title=PHPUnit failed::$annotation"
+            echo "::error title=Backend verification failed::$annotation"
           fi
 
-          exit "$test_status"
+          exit "$verification_status"
 
       - name: Audit PHP dependencies
         run: composer audit --locked
@@ -80,6 +73,7 @@ jobs:
   frontend:
     name: Frontend quality
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Check out repository
@@ -94,8 +88,5 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Build production assets
-        run: npm run build
-
-      - name: Audit frontend dependencies
-        run: npm audit --audit-level=high
+      - name: Verify frontend
+        run: npm run check

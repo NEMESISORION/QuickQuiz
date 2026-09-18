@@ -8,6 +8,7 @@
     },
     "scripts": {
         "build": "vite build",
+        "check": "npm run build && npm audit --audit-level=high",
         "dev": "vite"
     },
     "devDependencies": {

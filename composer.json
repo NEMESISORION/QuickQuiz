@@ -59,6 +59,12 @@
         "format:check": [
             "@php vendor/bin/pint --test"
         ],
+        "verify": [
+            "@composer validate --strict",
+            "@format:check",
+            "@analyse",
+            "@test"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
