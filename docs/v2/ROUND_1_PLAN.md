@@ -1,6 +1,6 @@
 # QuickQuiz v2 — Round 1 Foundation Plan
 
-Status: Verification in progress
+Status: Complete
 
 ## Objective
 
@@ -51,7 +51,7 @@ The repository-local toolchain avoids mutating the machine-wide PHP setup and ma
 
 ## Acceptance criteria
 
-- [ ] A clean checkout can install locked dependencies with documented commands.
+- [x] A clean checkout can install locked dependencies with documented commands.
 - [x] The application boots on PHP 8.5 and exposes a passing health check.
 - [x] Database migrations run against local SQLite.
 - [x] Backend automated tests pass.
@@ -60,4 +60,4 @@ The repository-local toolchain avoids mutating the machine-wide PHP setup and ma
 - [x] The initial QuickQuiz UI shell is responsive and accessible by construction.
 - [x] CI expresses every required verification command.
 - [x] Legacy runtime remains recoverable from Git history and its release tag.
-- [ ] Round 1 is committed and pushed only after all available gates are green.
+- [x] Round 1 is committed and pushed only after all available gates are green.
