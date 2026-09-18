@@ -1,10 +1,44 @@
 # QuickQuiz
 
-QuickQuiz is being rebuilt as a modern assessment platform for educators and learners. Version 2 focuses on secure role-based workflows, reliable quiz delivery and scoring, meaningful analytics, live sessions, accessibility, automated testing, and a polished product-specific experience.
+QuickQuiz v2 is a modern assessment platform for educators and learners. It is being rebuilt around secure role-based workflows, reliable quiz delivery and scoring, meaningful analytics, live sessions, accessibility, automated testing, and an interface designed specifically for assessment.
 
 ## Current status
 
-QuickQuiz v2 has completed **Round 0: Discovery and Specification** and entered **Round 1: Application Foundation**. The legacy PHP application remains recoverable from Git history while the new Laravel foundation is established.
+Round 1 is establishing the Laravel application foundation, product-owned design system, and automated quality gates. Authentication begins in Round 2. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+
+## Technology
+
+- PHP 8.5 and Laravel 13
+- Blade, Tailwind CSS 4, Alpine.js, and Vite
+- PostgreSQL in production and SQLite for local development/tests
+- PHPUnit, Larastan/PHPStan, and Laravel Pint
+- GitHub Actions for backend and frontend verification
+
+## Local setup
+
+Prerequisites: PHP 8.5 with the standard Laravel extensions, Composer 2, Node.js 24, and npm.
+
+```powershell
+composer install
+Copy-Item .env.example .env
+php artisan key:generate
+php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+php artisan migrate
+npm ci
+npm run build
+php artisan serve
+```
+
+Open `http://127.0.0.1:8000`. The application health check is available at `/up`.
+
+## Verification
+
+```powershell
+php artisan test --compact
+php vendor/bin/phpstan analyse --memory-limit=1G
+php vendor/bin/pint --format agent
+npm run build
+```
 
 ## v2 documentation
 
@@ -18,28 +52,9 @@ QuickQuiz v2 has completed **Round 0: Discovery and Specification** and entered 
 
 ## Product direction
 
-QuickQuiz v2 will provide:
-
-- Quiz authoring, scheduling, publishing, and preview.
+- Deliberate quiz authoring, scheduling, publishing, and preview.
 - A focused timed assessment experience with autosave and accessible navigation.
 - Server-authoritative attempts, scoring, review policies, and certificates.
 - Real educator and learner analytics without placeholder statistics.
-- Live hosted quizzes with join codes and leaderboards.
-- A responsive interface designed specifically for assessment workflows.
-
-## Legacy application
-
-The current application requires PHP 8.2 with PDO SQLite:
-
-```powershell
-php -S 127.0.0.1:8000 -t public
-```
-
-Then open `http://127.0.0.1:8000`.
-
-Demo accounts in the legacy seed data:
-
-- Administrator: `admin` / `1234`
-- Student: `student` / `1234`
-
-These credentials are for local demonstration only and will not be used as production defaults.
+- Live hosted quizzes with join codes and meaningful leaderboards.
+- Responsive student and educator workspaces with distinct information needs.

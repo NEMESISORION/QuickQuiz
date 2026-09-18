@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Segoe UI Variable', 'Segoe UI', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+
+    --color-brand-50: #eef2ff;
+    --color-brand-100: #e0e7ff;
+    --color-brand-200: #c7d2fe;
+    --color-brand-500: #6366f1;
+    --color-brand-600: #4f46e5;
+    --color-brand-700: #4338ca;
+    --color-brand-950: #1e1b4b;
+
+    --color-accent-50: #f0fdfa;
+    --color-accent-100: #ccfbf1;
+    --color-accent-500: #14b8a6;
+    --color-accent-600: #0d9488;
+    --color-accent-700: #0f766e;
+
+    --color-canvas: #f8fafc;
+    --color-surface: #ffffff;
+    --color-ink: #0f172a;
+    --color-muted: #64748b;
+    --color-line: #e2e8f0;
+    --color-success: #15803d;
+    --color-warning: #b45309;
+    --color-danger: #b91c1c;
+
+    --shadow-soft: 0 20px 60px -28px rgb(15 23 42 / 0.28);
+    --shadow-panel: 0 12px 36px -20px rgb(15 23 42 / 0.25);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: var(--color-canvas);
+        color: var(--color-ink);
+        font-family: var(--font-sans);
+        text-rendering: optimizeLegibility;
+    }
+
+    :focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--color-brand-500) 55%, transparent);
+        outline-offset: 3px;
+    }
+
+    ::selection {
+        background: var(--color-brand-200);
+        color: var(--color-brand-950);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
