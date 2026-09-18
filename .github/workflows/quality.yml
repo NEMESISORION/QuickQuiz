@@ -46,7 +46,21 @@ jobs:
         run: vendor/bin/phpstan analyse --memory-limit=1G
 
       - name: Run backend tests
-        run: vendor/bin/phpunit
+        shell: bash
+        run: |
+          set +e
+          test_output=$(vendor/bin/phpunit 2>&1)
+          test_status=$?
+          printf '%s\n' "$test_output"
+
+          if [ "$test_status" -ne 0 ]; then
+            annotation=${test_output//'%'/'%25'}
+            annotation=${annotation//$'\r'/'%0D'}
+            annotation=${annotation//$'\n'/'%0A'}
+            echo "::error title=PHPUnit failed::$annotation"
+          fi
+
+          exit "$test_status"
 
       - name: Audit PHP dependencies
         run: composer audit --locked
