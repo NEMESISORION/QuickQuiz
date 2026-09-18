@@ -1,6 +1,6 @@
 # QuickQuiz v2 — Round 1B Architecture and UI Foundation
 
-Status: Verification in progress
+Status: Complete
 
 ## Objective
 
@@ -26,5 +26,5 @@ Establish concrete code-placement rules and a reusable assessment-oriented inter
 - [x] The landing feature test covers the updated public contract.
 - [x] The interface is reviewed at 360 px and desktop widths without horizontal overflow.
 - [x] Formatting, static analysis, tests, and production assets pass locally.
-- [ ] GitHub Actions passes from the final Round 1B commit.
-- [ ] Round 1B is committed and pushed before Round 1C starts.
+- [x] GitHub Actions passes from the final Round 1B commit.
+- [x] Round 1B is committed and pushed before Round 1C starts.
