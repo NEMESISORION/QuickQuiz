@@ -37,7 +37,19 @@ jobs:
       - name: Prepare application
         run: |
           cp .env.example .env
-          php artisan key:generate
+          php artisan key:generate --no-interaction
+          touch database/database.sqlite
+          php artisan migrate --force --no-interaction
+
+      - name: Validate Composer configuration
+        run: composer validate --strict
+
+      - name: Verify cached application configuration
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+          php artisan config:clear
+          php artisan route:clear
 
       - name: Check formatting
         run: vendor/bin/pint --test

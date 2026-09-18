@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Round 1 is establishing the Laravel application foundation, product-owned design system, and automated quality gates. Authentication begins in Round 2. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Round 1A is hardening the environment and repository foundation. UI foundation work follows in Round 1B, and complete quality/delivery verification follows in Round 1C. Authentication begins after those foundation checkpoints. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -19,24 +19,21 @@ Round 1 is establishing the Laravel application foundation, product-owned design
 Prerequisites: PHP 8.5 with the standard Laravel extensions, Composer 2, Node.js 24, and npm.
 
 ```powershell
-composer install
-Copy-Item .env.example .env
-php artisan key:generate
-php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
-php artisan migrate
-npm ci
-npm run build
+composer install --no-interaction --prefer-dist
+composer run setup
 php artisan serve
 ```
+
+The setup command copies `.env.example` when needed, generates the application key, creates the local SQLite database, runs migrations, installs the exact frontend lockfile, and builds production assets.
 
 Open `http://127.0.0.1:8000`. The application health check is available at `/up`.
 
 ## Verification
 
 ```powershell
-php artisan test --compact
-php vendor/bin/phpstan analyse --memory-limit=1G
-php vendor/bin/pint --format agent
+composer run test
+composer run analyse
+composer run format:check
 npm run build
 ```
 
@@ -49,6 +46,7 @@ npm run build
 - [Delivery rounds](docs/v2/DELIVERY_ROUNDS.md)
 - [Architecture decisions](docs/v2/DECISIONS.md)
 - [Round 1 foundation plan](docs/v2/ROUND_1_PLAN.md)
+- [Round 1A environment and repository plan](docs/v2/ROUND_1A_PLAN.md)
 
 ## Product direction
 

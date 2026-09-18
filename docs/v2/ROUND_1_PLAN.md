@@ -1,10 +1,18 @@
 # QuickQuiz v2 — Round 1 Foundation Plan
 
-Status: Complete
+Status: Split into focused checkpoints
 
 ## Objective
 
 Replace the legacy runtime with a clean, reproducible Laravel 13 foundation that enforces the architectural, UX, security, and quality decisions accepted in Round 0.
+
+## Checkpoints
+
+- **Round 1A — Environment and repository:** runtime requirements, locked dependencies, environment safety, database bootstrap, and clean installation.
+- **Round 1B — Architecture and UI foundation:** application seams, design tokens, layouts, responsive behavior, and accessibility.
+- **Round 1C — Quality and delivery:** automated tests, static analysis, formatting, production builds, CI, and GitHub delivery.
+
+Each checkpoint must pass locally and in GitHub Actions before the next checkpoint begins.
 
 ## Toolchain
 
