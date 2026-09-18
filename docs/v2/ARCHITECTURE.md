@@ -32,6 +32,19 @@ Controllers coordinate requests; they do not contain scoring formulas or large d
 
 Laravel conventions remain the default; folders are introduced only when a real boundary needs them.
 
+## Code placement convention
+
+QuickQuiz keeps framework adapters conventional and groups business behavior by domain only after that behavior exists:
+
+- `app/Http/Controllers/{Domain}` and `app/Http/Requests/{Domain}` contain HTTP coordination and validation.
+- `app/Actions/{Domain}` contains focused application operations that coordinate a use case.
+- `app/Domain/{Domain}` contains domain services, value objects, lifecycle rules, and enums that are independent of HTTP.
+- `app/Models` contains Eloquent models so framework conventions and relationships remain easy to discover.
+- `app/Policies` contains resource authorization; policy methods delegate reusable domain rules when necessary.
+- `resources/views/{domain}` contains feature pages, while `resources/views/components` contains shared interface primitives and layouts.
+
+Empty module directories, generic repositories, and one-method service wrappers are prohibited. A boundary is introduced with the first real behavior that needs it and must have a focused test.
+
 ## Core data model
 
 - `users`

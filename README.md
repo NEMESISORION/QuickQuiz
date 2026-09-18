@@ -47,6 +47,7 @@ npm run build
 - [Architecture decisions](docs/v2/DECISIONS.md)
 - [Round 1 foundation plan](docs/v2/ROUND_1_PLAN.md)
 - [Round 1A environment and repository plan](docs/v2/ROUND_1A_PLAN.md)
+- [Round 1B architecture and UI foundation](docs/v2/ROUND_1B_PLAN.md)
 
 ## Product direction
 

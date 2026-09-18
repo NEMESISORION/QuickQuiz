@@ -6,6 +6,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="QuickQuiz helps educators build thoughtful assessments and learners understand their progress.">
+        <meta name="theme-color" content="#4f46e5">
 
         <title>{{ $title ? $title.' · '.config('app.name') : config('app.name') }}</title>
 
@@ -25,11 +26,11 @@
                 <div class="hidden items-center gap-8 text-sm font-semibold text-muted md:flex">
                     <a class="transition hover:text-brand-700" href="#experience">Experience</a>
                     <a class="transition hover:text-brand-700" href="#foundation">Foundation</a>
-                    <a class="transition hover:text-brand-700" href="#roadmap">Roadmap</a>
+                    <a class="transition hover:text-brand-700" href="#principles">Principles</a>
                 </div>
 
-                <span class="shrink-0 rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-brand-700">
-                    v2 foundation
+                <span class="hidden shrink-0 sm:inline-flex">
+                    <x-ui.badge class="uppercase tracking-[0.14em]">Assessment, clarified</x-ui.badge>
                 </span>
             </nav>
         </header>
