@@ -46,7 +46,7 @@ jobs:
         run: vendor/bin/phpstan analyse --memory-limit=1G
 
       - name: Run backend tests
-        run: php artisan test --compact
+        run: vendor/bin/phpunit
 
       - name: Audit PHP dependencies
         run: composer audit --locked
