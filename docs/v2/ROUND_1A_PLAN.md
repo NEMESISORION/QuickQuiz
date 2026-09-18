@@ -1,6 +1,6 @@
 # QuickQuiz v2 — Round 1A Environment and Repository
 
-Status: Verification in progress
+Status: Complete
 
 ## Objective
 
@@ -26,5 +26,5 @@ Make the QuickQuiz repository reproducible from a clean checkout without relying
 - [x] Configuration and route caches build successfully.
 - [x] Backend and frontend verification commands pass locally.
 - [x] Production CSS is deterministic and ignores stale compiled views.
-- [ ] GitHub Actions passes from the final Round 1A commit.
-- [ ] Round 1A is committed and pushed before Round 1B starts.
+- [x] GitHub Actions passes from the final Round 1A commit.
+- [x] Round 1A is committed and pushed before Round 1B starts.
