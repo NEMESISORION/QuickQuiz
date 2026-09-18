@@ -1,6 +1,6 @@
 # QuickQuiz v2 — Round 1A Environment and Repository
 
-Status: In progress
+Status: Verification in progress
 
 ## Objective
 
@@ -21,9 +21,10 @@ Make the QuickQuiz repository reproducible from a clean checkout without relying
 - [x] Composer and npm lockfiles are committed.
 - [x] Local secrets, generated files, dependencies, and tools are ignored.
 - [x] Application code does not read environment variables outside configuration files.
-- [ ] `composer run setup` succeeds from a clean checkout.
-- [ ] Database migrations succeed against a newly created SQLite database.
-- [ ] Configuration and route caches build successfully.
-- [ ] Backend and frontend verification commands pass locally.
+- [x] `composer run setup` succeeds from a clean checkout.
+- [x] Database migrations succeed against a newly created SQLite database.
+- [x] Configuration and route caches build successfully.
+- [x] Backend and frontend verification commands pass locally.
+- [x] Production CSS is deterministic and ignores stale compiled views.
 - [ ] GitHub Actions passes from the final Round 1A commit.
 - [ ] Round 1A is committed and pushed before Round 1B starts.
