@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Identity\ProfileUpdated;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -33,6 +34,8 @@ class ProfileController extends Controller
         }
 
         $user->save();
+
+        event(new ProfileUpdated($user, $emailChanged));
 
         if ($emailChanged) {
             $user->sendEmailVerificationNotification();

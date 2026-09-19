@@ -25,4 +25,22 @@ class UserPolicyTest extends TestCase
 
         $this->assertFalse((new UserPolicy)->update($user, $otherUser));
     }
+
+    public function test_user_can_view_own_security_activity(): void
+    {
+        $user = new User(['email' => 'user@example.com']);
+        $user->id = 10;
+
+        $this->assertTrue((new UserPolicy)->viewSecurityActivity($user, $user));
+    }
+
+    public function test_user_cannot_view_another_accounts_security_activity(): void
+    {
+        $user = new User(['email' => 'user@example.com']);
+        $user->id = 10;
+        $otherUser = new User(['email' => 'other@example.com']);
+        $otherUser->id = 20;
+
+        $this->assertFalse((new UserPolicy)->viewSecurityActivity($user, $otherUser));
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
+use App\Events\Identity\RoleSelected;
 use App\Http\Requests\SelectRoleRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -35,6 +36,8 @@ class OnboardingController extends Controller
         $user->role = $role;
         $user->role_selected_at = now();
         $user->save();
+
+        event(new RoleSelected($user, $role));
 
         return redirect()->route($role->dashboardRoute());
     }

@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Round 1 is complete. Round 2A provides database-backed authentication and recovery; Round 2B adds verified email, one-time educator or learner onboarding, policy-protected profiles, server-authorized role workspaces, and responsive identity UI. Round 2C will close identity with audit history, demo accounts, and production hardening. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Rounds 1 and 2 are complete. QuickQuiz now has database-backed authentication, verified email, one-time educator or learner onboarding, policy-protected profiles, server-authorized workspaces, security activity history, hardened sessions and browser responses, and local-only demo accounts. Round 3 begins the quiz-authoring domain. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -28,6 +28,17 @@ The setup command copies `.env.example` when needed, generates the application k
 
 Open `http://127.0.0.1:8000`. The application health check is available at `/up`.
 
+### Local demo accounts
+
+Running `php artisan db:seed` in the local environment creates two idempotent, verified demo accounts. The demo seeder refuses to run in production.
+
+| Workspace | Email | Password |
+| --- | --- | --- |
+| Educator | `educator@demo.quickquiz.test` | `DemoQuickQuiz1!` |
+| Learner | `learner@demo.quickquiz.test` | `DemoQuickQuiz1!` |
+
+For production, set `SESSION_SECURE_COOKIE=true`, keep `SESSION_ENCRYPT=true`, serve only over HTTPS, and never deploy these demo credentials.
+
 ## Verification
 
 ```powershell
@@ -50,6 +61,7 @@ composer audit --locked
 - [Round 1C quality and delivery](docs/v2/ROUND_1C_PLAN.md)
 - [Round 2A authentication foundation](docs/v2/ROUND_2A_PLAN.md)
 - [Round 2B roles and authorization](docs/v2/ROUND_2B_PLAN.md)
+- [Round 2C identity security and auditability](docs/v2/ROUND_2C_PLAN.md)
 
 ## Product direction
 

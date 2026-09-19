@@ -37,5 +37,6 @@ class AppServiceProvider extends ServiceProvider
             'access-learner-workspace',
             fn (User $user): bool => $user->hasRole(UserRole::Learner),
         );
+
     }
 }

@@ -24,7 +24,10 @@
             <p class="text-xs font-black uppercase tracking-[0.16em] text-muted">Workspace role</p>
             <p class="mt-3 text-2xl font-black">{{ $user->role->label() }}</p>
             <p class="mt-2 leading-7 text-muted">Roles are protected identity attributes and cannot be changed through profile input.</p>
-            <a href="{{ route('dashboard') }}" class="mt-6 inline-flex min-h-11 items-center font-bold text-brand-700 underline decoration-brand-200 underline-offset-4 hover:text-brand-950">Return to workspace</a>
+            <div class="mt-6 flex flex-col items-start gap-2">
+                <a href="{{ route('profile.security') }}" class="inline-flex min-h-11 items-center font-bold text-brand-700 underline decoration-brand-200 underline-offset-4 hover:text-brand-950">View security activity</a>
+                <a href="{{ route('dashboard') }}" class="inline-flex min-h-11 items-center font-bold text-muted underline decoration-line underline-offset-4 hover:text-ink">Return to workspace</a>
+            </div>
         </x-ui.panel>
     </div>
 </x-layouts.workspace>
