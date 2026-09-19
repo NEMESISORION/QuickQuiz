@@ -14,6 +14,8 @@ class AuthenticatedSessionTest extends TestCase
 
     public function test_password_change_invalidates_a_session_using_the_previous_hash(): void
     {
+        $this->withoutVite();
+
         $user = User::factory()->learner()->create([
             'email' => 'session@example.com',
             'password' => 'SecurePass1',
