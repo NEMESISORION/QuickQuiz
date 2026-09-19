@@ -19,8 +19,8 @@
                 </div>
 
                 <div class="flex flex-col gap-3 sm:flex-row">
-                    <x-ui.button href="#experience" class="min-h-12 px-6 py-3 text-base">
-                        Explore the experience
+                    <x-ui.button href="{{ route('register') }}" class="min-h-12 px-6 py-3 text-base">
+                        Create your account
                     </x-ui.button>
                     <x-ui.button href="#principles" variant="secondary" class="min-h-12 px-6 py-3 text-base">
                         See the product principles
