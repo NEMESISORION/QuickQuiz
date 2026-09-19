@@ -39,7 +39,7 @@ The project must demonstrate more than CRUD. Its engineering story is secure rol
 ### Identity and access
 
 - Registration, login, logout, password reset, and profile management.
-- Student and administrator roles with policy-based authorization.
+- Learner and educator roles with policy-based authorization.
 - Secure sessions, CSRF protection, login throttling, and audit-worthy events.
 - Seeded demo accounts that are clearly isolated from production setup.
 

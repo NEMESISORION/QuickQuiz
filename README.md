@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Round 1 is complete, and Round 2A now provides database-backed registration, sign-in, sign-out, password recovery, secure session handling, throttling, and a protected workspace. Round 2B will add roles, authorization, and role-specific onboarding. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Round 1 is complete. Round 2A provides database-backed authentication and recovery; Round 2B adds verified email, one-time educator or learner onboarding, policy-protected profiles, server-authorized role workspaces, and responsive identity UI. Round 2C will close identity with audit history, demo accounts, and production hardening. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -49,6 +49,7 @@ composer audit --locked
 - [Round 1B architecture and UI foundation](docs/v2/ROUND_1B_PLAN.md)
 - [Round 1C quality and delivery](docs/v2/ROUND_1C_PLAN.md)
 - [Round 2A authentication foundation](docs/v2/ROUND_2A_PLAN.md)
+- [Round 2B roles and authorization](docs/v2/ROUND_2B_PLAN.md)
 
 ## Product direction
 

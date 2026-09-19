@@ -102,7 +102,7 @@ class AuthenticationTest extends TestCase
         $this->withoutVite();
 
         $this->actingAs($user)
-            ->get(route('dashboard'))
+            ->get(route('learner.dashboard'))
             ->assertOk()
             ->assertSee('&lt;script&gt;', false)
             ->assertDontSee('<script>alert("unsafe")</script>', false);

@@ -39,6 +39,7 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => 'Ada Lovelace',
             'email' => 'ada@example.com',
+            'role' => null,
         ]);
         Event::assertDispatched(Registered::class);
     }
