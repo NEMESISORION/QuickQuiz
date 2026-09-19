@@ -59,7 +59,11 @@ jobs:
           printf '%s\n' "$verification_output"
 
           if [ "$verification_status" -ne 0 ]; then
-            annotation=${verification_output//'%'/'%25'}
+            # GitHub truncates command annotations at roughly 4 KB. Keep the
+            # tail so the failing assertion is visible instead of only the
+            # successful checks that ran before it.
+            annotation_output=$(printf '%s\n' "$verification_output" | tail -c 3500)
+            annotation=${annotation_output//'%'/'%25'}
             annotation=${annotation//$'\r'/'%0D'}
             annotation=${annotation//$'\n'/'%0A'}
             echo "::error title=Backend verification failed::$annotation"

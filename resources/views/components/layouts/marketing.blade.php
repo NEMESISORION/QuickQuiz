@@ -29,9 +29,14 @@
                     <a class="transition hover:text-brand-700" href="#principles">Principles</a>
                 </div>
 
-                <span class="hidden shrink-0 sm:inline-flex">
-                    <x-ui.badge class="uppercase tracking-[0.14em]">Assessment, clarified</x-ui.badge>
-                </span>
+                <div class="flex shrink-0 items-center gap-2">
+                    @auth
+                        <x-ui.button href="{{ route('dashboard') }}" class="px-4">Workspace</x-ui.button>
+                    @else
+                        <a href="{{ route('login') }}" class="hidden min-h-11 items-center px-3 text-sm font-bold text-ink hover:text-brand-700 sm:inline-flex">Sign in</a>
+                        <x-ui.button href="{{ route('register') }}" class="px-4">Get started</x-ui.button>
+                    @endauth
+                </div>
             </nav>
         </header>
 
