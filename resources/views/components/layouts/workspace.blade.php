@@ -25,6 +25,11 @@
                 <a href="{{ route('dashboard') }}" aria-label="QuickQuiz workspace"><x-brand.mark /></a>
 
                 <div class="flex items-center gap-2 sm:gap-3">
+                    @if ($currentUser->role->value === 'educator')
+                        <a href="{{ route('educator.quizzes.index') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('educator.quizzes.*')) aria-current="page" @endif>
+                            Quizzes
+                        </a>
+                    @endif
                     <span class="hidden max-w-48 truncate text-sm font-bold text-ink md:inline" title="{{ $currentUser->name }}">{{ $currentUser->name }}</span>
                     <x-ui.badge tone="{{ $currentUser->role->value === 'educator' ? 'brand' : 'accent' }}">
                         {{ $currentUser->role->label() }}

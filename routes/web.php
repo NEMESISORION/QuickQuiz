@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SecurityActivityController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,9 +53,13 @@ Route::middleware('auth')->group(function (): void {
         Route::middleware('role.selected')->group(function (): void {
             Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-            Route::view('/educator', 'educator.dashboard')
-                ->middleware('can:access-educator-workspace')
-                ->name('educator.dashboard');
+            Route::middleware('can:access-educator-workspace')
+                ->prefix('educator')
+                ->name('educator.')
+                ->group(function (): void {
+                    Route::view('/', 'educator.dashboard')->name('dashboard');
+                    Route::resource('quizzes', QuizController::class);
+                });
 
             Route::view('/learner', 'learner.dashboard')
                 ->middleware('can:access-learner-workspace')
