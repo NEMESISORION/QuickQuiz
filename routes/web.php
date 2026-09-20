@@ -13,6 +13,7 @@ use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionPositionController;
+use App\Http\Controllers\QuizAttemptAnswerController;
 use App\Http\Controllers\QuizAttemptController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizPreviewController;
@@ -88,6 +89,9 @@ Route::middleware('auth')->group(function (): void {
                         ->name('quizzes.attempts.store');
                     Route::get('attempts/{quizAttempt}', [QuizAttemptController::class, 'show'])
                         ->name('attempts.show');
+                    Route::put('attempts/{quizAttempt}/questions/{quizAttemptQuestion}/answer', QuizAttemptAnswerController::class)
+                        ->middleware('throttle:120,1')
+                        ->name('attempts.answers.update');
                 });
 
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
