@@ -51,4 +51,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(IdentityAuditEvent::class);
     }
+
+    /**
+     * @return HasMany<Quiz, $this>
+     */
+    public function quizzes(): HasMany
+    {
+        return $this->hasMany(Quiz::class, 'educator_id');
+    }
 }

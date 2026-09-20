@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Rounds 1 and 2 are complete. QuickQuiz now has database-backed authentication, verified email, one-time educator or learner onboarding, policy-protected profiles, server-authorized workspaces, security activity history, hardened sessions and browser responses, and local-only demo accounts. Round 3 begins the quiz-authoring domain. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Rounds 1, 2, and 3A are complete. QuickQuiz now has secure identity workflows plus the database-backed quiz-authoring domain: educator ownership, lifecycle states, assessment policies, ordered questions, and answer options. Round 3B adds the educator quiz-management experience. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -30,7 +30,7 @@ Open `http://127.0.0.1:8000`. The application health check is available at `/up`
 
 ### Local demo accounts
 
-Running `php artisan db:seed` in the local environment creates two idempotent, verified demo accounts. The demo seeder refuses to run in production.
+Running `php artisan db:seed` in the local environment creates two idempotent, verified demo accounts and a starter quiz for the demo educator. The demo seeders refuse to run in production.
 
 | Workspace | Email | Password |
 | --- | --- | --- |
@@ -62,6 +62,7 @@ composer audit --locked
 - [Round 2A authentication foundation](docs/v2/ROUND_2A_PLAN.md)
 - [Round 2B roles and authorization](docs/v2/ROUND_2B_PLAN.md)
 - [Round 2C identity security and auditability](docs/v2/ROUND_2C_PLAN.md)
+- [Round 3A quiz domain foundation](docs/v2/ROUND_3A_PLAN.md)
 
 ## Product direction
 
