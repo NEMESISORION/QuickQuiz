@@ -76,4 +76,10 @@ class Quiz extends Model
     {
         return $this->hasMany(Question::class)->orderBy('position')->orderBy('id');
     }
+
+    /** @return HasMany<QuizAttempt, $this> */
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
 }
