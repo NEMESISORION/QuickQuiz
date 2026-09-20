@@ -17,6 +17,7 @@ class LearnerQuizAccessTest extends TestCase
 
     public function test_catalogue_shows_released_and_upcoming_quizzes_but_hides_drafts_and_closed_quizzes(): void
     {
+        $this->withoutVite();
         $learner = User::factory()->learner()->create();
         $open = Quiz::factory()->published()->create(['title' => '<Open quiz>', 'opens_at' => now()->subMinute()]);
         $upcoming = Quiz::factory()->scheduled()->create(['title' => 'Upcoming quiz']);
