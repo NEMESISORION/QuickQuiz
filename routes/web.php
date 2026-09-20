@@ -8,10 +8,12 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LearnerQuizController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionPositionController;
+use App\Http\Controllers\QuizAttemptController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizPreviewController;
 use App\Http\Controllers\QuizPublicationController;
@@ -75,9 +77,18 @@ Route::middleware('auth')->group(function (): void {
                         ->name('quizzes.publication.store');
                 });
 
-            Route::view('/learner', 'learner.dashboard')
-                ->middleware('can:access-learner-workspace')
-                ->name('learner.dashboard');
+            Route::middleware('can:access-learner-workspace')
+                ->prefix('learner')
+                ->name('learner.')
+                ->group(function (): void {
+                    Route::view('/', 'learner.dashboard')->name('dashboard');
+                    Route::get('quizzes', [LearnerQuizController::class, 'index'])->name('quizzes.index');
+                    Route::get('quizzes/{quiz}', [LearnerQuizController::class, 'show'])->name('quizzes.show');
+                    Route::post('quizzes/{quiz}/attempts', [QuizAttemptController::class, 'store'])
+                        ->name('quizzes.attempts.store');
+                    Route::get('attempts/{quizAttempt}', [QuizAttemptController::class, 'show'])
+                        ->name('attempts.show');
+                });
 
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -56,6 +56,17 @@ class QuizPolicy
         return $this->owns($user, $quiz) && $quiz->status !== QuizStatus::Archived;
     }
 
+    public function discover(User $user, Quiz $quiz): bool
+    {
+        return $user->hasRole(UserRole::Learner)
+            && in_array($quiz->status, [QuizStatus::Published, QuizStatus::Scheduled], true);
+    }
+
+    public function startAttempt(User $user, Quiz $quiz): bool
+    {
+        return $this->discover($user, $quiz);
+    }
+
     private function owns(User $user, Quiz $quiz): bool
     {
         return $user->hasRole(UserRole::Educator) && $quiz->educator_id === $user->getKey();
