@@ -31,8 +31,9 @@
             <div class="mt-7 flex flex-wrap gap-3">
                 @can('update', $quiz)
                     <x-ui.button href="{{ route('educator.quizzes.edit', $quiz) }}">Edit settings</x-ui.button>
+                    <x-ui.button href="{{ route('educator.quizzes.questions.create', $quiz) }}" variant="secondary">Add question</x-ui.button>
                 @endcan
-                <x-ui.button href="{{ route('educator.quizzes.index') }}" variant="secondary">Back to library</x-ui.button>
+                <x-ui.button href="{{ route('educator.quizzes.preview', $quiz) }}" variant="secondary">Learner preview</x-ui.button>
             </div>
 
             <section class="mt-10" aria-labelledby="questions-title">
@@ -54,16 +55,54 @@
                             </div>
                             <h3 class="mt-3 font-bold leading-7">{{ $question->prompt }}</h3>
                         </div>
-                        <p class="text-sm font-black text-ink">{{ $question->points }} {{ Str::plural('pt', $question->points) }}</p>
+                        <div class="flex flex-col items-end gap-2">
+                            <p class="text-sm font-black text-ink">{{ $question->points }} {{ Str::plural('pt', $question->points) }}</p>
+                            @can('update', $question)
+                                <a href="{{ route('educator.quizzes.questions.edit', [$quiz, $question]) }}" class="text-sm font-bold text-brand-700 underline underline-offset-4">Edit</a>
+                                <div class="flex gap-1">
+                                    @foreach (['up' => 'Move up', 'down' => 'Move down'] as $direction => $label)
+                                        <form method="POST" action="{{ route('educator.quizzes.questions.position', [$quiz, $question]) }}">
+                                            @csrf @method('PATCH')
+                                            <input type="hidden" name="direction" value="{{ $direction }}">
+                                            <button type="submit" class="min-h-9 rounded-lg border border-line px-2 text-xs font-bold hover:bg-brand-50" aria-label="{{ $label }} question {{ $question->position }}">{{ $direction === 'up' ? '↑' : '↓' }}</button>
+                                        </form>
+                                    @endforeach
+                                </div>
+                            @endcan
+                        </div>
                     </article>
                 @empty
                     <x-ui.panel class="mt-6 border-dashed p-7 text-center sm:p-10">
                         <p class="text-xs font-black uppercase tracking-[0.16em] text-muted">No questions yet</p>
                         <h3 class="mt-3 text-2xl font-black">The assessment contract is ready.</h3>
-                        <p class="mx-auto mt-2 max-w-lg leading-7 text-muted">Question authoring is the next stage. For now, refine the quiz settings so the builder starts from clear rules.</p>
+                        <p class="mx-auto mt-2 max-w-lg leading-7 text-muted">Add a multiple-choice or true-or-false question, then preview the complete learner experience.</p>
+                        @can('update', $quiz)<div class="mt-5"><x-ui.button href="{{ route('educator.quizzes.questions.create', $quiz) }}">Add first question</x-ui.button></div>@endcan
                     </x-ui.panel>
                 @endforelse
             </section>
+
+            @can('publish', $quiz)
+                <x-ui.panel class="mt-10 p-6 sm:p-8">
+                    <p class="text-xs font-black uppercase tracking-[0.16em] text-accent-700">Final delivery step</p>
+                    <h2 class="mt-2 text-2xl font-black">Publish or schedule</h2>
+                    <p class="mt-2 leading-7 text-muted">Publishing locks the quiz structure so every learner receives a stable assessment.</p>
+                    @error('quiz')<p class="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-danger">{{ $message }}</p>@enderror
+                    <form method="POST" action="{{ route('educator.quizzes.publication.store', $quiz) }}" class="mt-6 grid gap-4 sm:grid-cols-2">
+                        @csrf
+                        <div class="flex flex-col gap-2 sm:col-span-2">
+                            <label for="mode" class="text-sm font-bold">Release timing</label>
+                            <select id="mode" name="mode" class="min-h-12 rounded-xl border border-line bg-white px-4 py-3">
+                                <option value="immediate">Publish now</option>
+                                <option value="scheduled" @selected(old('mode') === 'scheduled')>Schedule for later</option>
+                            </select>
+                            @error('mode')<p class="text-sm font-semibold text-danger">{{ $message }}</p>@enderror
+                        </div>
+                        <x-ui.input label="Opens at (for scheduled release)" name="opens_at" type="datetime-local" :value="old('opens_at')" />
+                        <x-ui.input label="Closes at (optional)" name="closes_at" type="datetime-local" :value="old('closes_at')" />
+                        <div class="sm:col-span-2"><x-ui.button type="submit">Confirm release</x-ui.button></div>
+                    </form>
+                </x-ui.panel>
+            @endcan
         </div>
 
         <aside class="lg:sticky lg:top-6">

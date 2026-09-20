@@ -6,6 +6,7 @@ use App\Enums\QuizReviewPolicy;
 use App\Enums\QuizStatus;
 use App\Http\Requests\StoreQuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
+use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -80,6 +81,9 @@ class QuizController extends Controller
         $quiz->load([
             'questions' => fn ($query) => $query->withCount('answerOptions'),
         ]);
+        $quiz->questions->each(
+            fn (Question $question): Question => $question->setRelation('quiz', $quiz),
+        );
 
         return view('educator.quizzes.show', ['quiz' => $quiz]);
     }
