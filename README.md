@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Rounds 1, 2, and 3A are complete. QuickQuiz now has secure identity workflows plus the database-backed quiz-authoring domain: educator ownership, lifecycle states, assessment policies, ordered questions, and answer options. Round 3B adds the educator quiz-management experience. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Rounds 1, 2, 3A, and 3B are complete. QuickQuiz now has secure identity workflows plus a database-backed quiz-authoring domain and responsive educator management experience for creating, reviewing, editing, and archiving assessment drafts. Round 3C adds the question builder, preview, and publishing workflow. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -63,6 +63,7 @@ composer audit --locked
 - [Round 2B roles and authorization](docs/v2/ROUND_2B_PLAN.md)
 - [Round 2C identity security and auditability](docs/v2/ROUND_2C_PLAN.md)
 - [Round 3A quiz domain foundation](docs/v2/ROUND_3A_PLAN.md)
+- [Round 3B educator quiz management](docs/v2/ROUND_3B_PLAN.md)
 
 ## Product direction
 
