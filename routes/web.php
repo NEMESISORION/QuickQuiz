@@ -10,7 +10,11 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionPositionController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizPreviewController;
+use App\Http\Controllers\QuizPublicationController;
 use App\Http\Controllers\SecurityActivityController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +63,16 @@ Route::middleware('auth')->group(function (): void {
                 ->group(function (): void {
                     Route::view('/', 'educator.dashboard')->name('dashboard');
                     Route::resource('quizzes', QuizController::class);
+                    Route::scopeBindings()->group(function (): void {
+                        Route::resource('quizzes.questions', QuestionController::class)
+                            ->except(['index', 'show']);
+                        Route::patch('quizzes/{quiz}/questions/{question}/position', QuestionPositionController::class)
+                            ->name('quizzes.questions.position');
+                    });
+                    Route::get('quizzes/{quiz}/preview', QuizPreviewController::class)
+                        ->name('quizzes.preview');
+                    Route::post('quizzes/{quiz}/publication', [QuizPublicationController::class, 'store'])
+                        ->name('quizzes.publication.store');
                 });
 
             Route::view('/learner', 'learner.dashboard')
