@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Attempts\ExpireQuizAttempt;
 use App\Domain\Attempts\StartQuizAttempt;
+use App\Enums\QuizAttemptStatus;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\User;
@@ -26,10 +28,22 @@ class QuizAttemptController extends Controller
             ->with('status', 'Your attempt is ready.');
     }
 
-    public function show(QuizAttempt $quizAttempt): View
+    public function show(QuizAttempt $quizAttempt, ExpireQuizAttempt $expireQuizAttempt): View|RedirectResponse
     {
         Gate::authorize('view', $quizAttempt);
-        $quizAttempt->load(['quiz', 'questions']);
+        if ($expireQuizAttempt->handle($quizAttempt)) {
+            return redirect()
+                ->route('learner.quizzes.show', $quizAttempt->quiz_id)
+                ->withErrors(['quiz' => 'Time has expired for this attempt.']);
+        }
+
+        if ($quizAttempt->status !== QuizAttemptStatus::InProgress) {
+            return redirect()
+                ->route('learner.quizzes.show', $quizAttempt->quiz_id)
+                ->withErrors(['quiz' => 'This attempt is no longer active.']);
+        }
+
+        $quizAttempt->load(['quiz', 'questions.options', 'answers']);
 
         return view('learner.attempts.show', ['attempt' => $quizAttempt]);
     }

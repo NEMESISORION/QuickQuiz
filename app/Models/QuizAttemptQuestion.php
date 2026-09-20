@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /** @property QuestionType $type */
 #[Fillable(['type', 'prompt', 'explanation', 'points', 'position'])]
@@ -39,5 +40,11 @@ class QuizAttemptQuestion extends Model
     public function options(): HasMany
     {
         return $this->hasMany(QuizAttemptOption::class)->orderBy('position')->orderBy('id');
+    }
+
+    /** @return HasOne<QuizAttemptAnswer, $this> */
+    public function answer(): HasOne
+    {
+        return $this->hasOne(QuizAttemptAnswer::class);
     }
 }

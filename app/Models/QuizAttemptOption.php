@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['content', 'is_correct', 'position'])]
 class QuizAttemptOption extends Model
@@ -30,5 +31,11 @@ class QuizAttemptOption extends Model
     public function sourceAnswerOption(): BelongsTo
     {
         return $this->belongsTo(AnswerOption::class, 'source_answer_option_id');
+    }
+
+    /** @return HasMany<QuizAttemptAnswer, $this> */
+    public function answers(): HasMany
+    {
+        return $this->hasMany(QuizAttemptAnswer::class);
     }
 }
