@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Domain\LiveSessions\JoinLiveSession;
+use App\Domain\LiveSessions\LiveSessionState;
+use App\Enums\LiveSessionStatus;
 use App\Http\Requests\JoinLiveSessionRequest;
 use App\Models\LiveSession;
 use App\Models\User;
@@ -29,7 +31,7 @@ class LearnerLiveSessionController extends Controller
             ->with('status', 'You joined the lobby.');
     }
 
-    public function show(Request $request, LiveSession $liveSession): View
+    public function show(Request $request, LiveSession $liveSession, LiveSessionState $liveSessionState): View
     {
         Gate::authorize('viewLearnerLobby', $liveSession);
         $learner = $request->user();
@@ -38,8 +40,33 @@ class LearnerLiveSessionController extends Controller
             ->whereBelongsTo($learner, 'learner')
             ->firstOrFail();
         $participant->update(['last_seen_at' => now()]);
-        $liveSession->load(['quiz', 'host']);
+        $liveSession->load(['quiz.questions', 'host', 'currentQuestion.answerOptions']);
+        $currentResponse = $liveSession->current_question_id === null
+            ? null
+            : $participant->responses()->where('question_id', $liveSession->current_question_id)->first();
+        $leaderboard = $liveSession->status === LiveSessionStatus::Completed
+            ? $liveSession->participants()
+                ->with('learner')
+                ->withSum('responses', 'points_awarded')
+                ->get()
+                ->sortByDesc('responses_sum_points_awarded')
+                ->values()
+            : collect();
+        $questionNumber = $liveSession->current_question_id === null
+            ? null
+            : $liveSession->quiz->questions->search(
+                fn ($question): bool => $question->getKey() === $liveSession->current_question_id,
+            );
 
-        return view('learner.live-sessions.show', ['liveSession' => $liveSession]);
+        return view('learner.live-sessions.show', [
+            'liveSession' => $liveSession,
+            'participant' => $participant,
+            'currentResponse' => $currentResponse,
+            'leaderboard' => $leaderboard,
+            'questionNumber' => $questionNumber === false || $questionNumber === null ? null : $questionNumber + 1,
+            'maxScore' => (int) $liveSession->quiz->questions->sum('points'),
+            'currentScore' => (int) $participant->responses()->sum('points_awarded'),
+            'syncVersion' => $liveSessionState->version($liveSession),
+        ]);
     }
 }

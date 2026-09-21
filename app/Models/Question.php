@@ -44,4 +44,10 @@ class Question extends Model
     {
         return $this->hasMany(AnswerOption::class)->orderBy('position')->orderBy('id');
     }
+
+    /** @return HasMany<LiveSessionResponse, $this> */
+    public function liveResponses(): HasMany
+    {
+        return $this->hasMany(LiveSessionResponse::class);
+    }
 }

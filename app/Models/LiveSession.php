@@ -13,10 +13,11 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property LiveSessionStatus $status
+ * @property Carbon|null $current_question_started_at
  * @property Carbon|null $started_at
  * @property Carbon|null $ended_at
  */
-#[Fillable(['host_id', 'code', 'status', 'started_at', 'ended_at'])]
+#[Fillable(['host_id', 'code', 'status', 'current_question_id', 'current_question_started_at', 'started_at', 'ended_at'])]
 class LiveSession extends Model
 {
     /** @use HasFactory<LiveSessionFactory> */
@@ -27,6 +28,7 @@ class LiveSession extends Model
     {
         return [
             'status' => LiveSessionStatus::class,
+            'current_question_started_at' => 'datetime',
             'started_at' => 'datetime',
             'ended_at' => 'datetime',
         ];
@@ -42,6 +44,12 @@ class LiveSession extends Model
     public function host(): BelongsTo
     {
         return $this->belongsTo(User::class, 'host_id');
+    }
+
+    /** @return BelongsTo<Question, $this> */
+    public function currentQuestion(): BelongsTo
+    {
+        return $this->belongsTo(Question::class, 'current_question_id');
     }
 
     /** @return HasMany<LiveSessionParticipant, $this> */

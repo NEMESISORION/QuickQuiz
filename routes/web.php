@@ -13,6 +13,9 @@ use App\Http\Controllers\EducatorQuizResultController;
 use App\Http\Controllers\LearnerAttemptHistoryController;
 use App\Http\Controllers\LearnerLiveSessionController;
 use App\Http\Controllers\LearnerQuizController;
+use App\Http\Controllers\LiveSessionAnswerController;
+use App\Http\Controllers\LiveSessionControlController;
+use App\Http\Controllers\LiveSessionStateController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
@@ -89,6 +92,10 @@ Route::middleware('auth')->group(function (): void {
                         ->name('quizzes.live-sessions.store');
                     Route::get('live-sessions/{liveSession}', [EducatorLiveSessionController::class, 'show'])
                         ->name('live-sessions.show');
+                    Route::post('live-sessions/{liveSession}/start', [LiveSessionControlController::class, 'start'])
+                        ->name('live-sessions.start');
+                    Route::post('live-sessions/{liveSession}/advance', [LiveSessionControlController::class, 'advance'])
+                        ->name('live-sessions.advance');
                 });
 
             Route::middleware('can:access-learner-workspace')
@@ -104,6 +111,9 @@ Route::middleware('auth')->group(function (): void {
                         ->name('live-sessions.store');
                     Route::get('live-sessions/{liveSession}', [LearnerLiveSessionController::class, 'show'])
                         ->name('live-sessions.show');
+                    Route::post('live-sessions/{liveSession}/answer', LiveSessionAnswerController::class)
+                        ->middleware('throttle:30,1')
+                        ->name('live-sessions.answer');
                     Route::get('quizzes', [LearnerQuizController::class, 'index'])->name('quizzes.index');
                     Route::get('quizzes/{quiz}', [LearnerQuizController::class, 'show'])->name('quizzes.show');
                     Route::post('quizzes/{quiz}/attempts', [QuizAttemptController::class, 'store'])
@@ -119,6 +129,10 @@ Route::middleware('auth')->group(function (): void {
                         ->middleware('throttle:120,1')
                         ->name('attempts.answers.update');
                 });
+
+            Route::get('/live-sessions/{liveSession}/state', LiveSessionStateController::class)
+                ->middleware('throttle:120,1')
+                ->name('live-sessions.state');
 
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
