@@ -8,8 +8,10 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EducatorLiveSessionController;
 use App\Http\Controllers\EducatorQuizResultController;
 use App\Http\Controllers\LearnerAttemptHistoryController;
+use App\Http\Controllers\LearnerLiveSessionController;
 use App\Http\Controllers\LearnerQuizController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
@@ -82,6 +84,11 @@ Route::middleware('auth')->group(function (): void {
                         ->name('quizzes.preview');
                     Route::post('quizzes/{quiz}/publication', [QuizPublicationController::class, 'store'])
                         ->name('quizzes.publication.store');
+                    Route::post('quizzes/{quiz}/live-sessions', [EducatorLiveSessionController::class, 'store'])
+                        ->middleware('throttle:10,1')
+                        ->name('quizzes.live-sessions.store');
+                    Route::get('live-sessions/{liveSession}', [EducatorLiveSessionController::class, 'show'])
+                        ->name('live-sessions.show');
                 });
 
             Route::middleware('can:access-learner-workspace')
@@ -90,6 +97,13 @@ Route::middleware('auth')->group(function (): void {
                 ->group(function (): void {
                     Route::view('/', 'learner.dashboard')->name('dashboard');
                     Route::get('attempts', LearnerAttemptHistoryController::class)->name('attempts.index');
+                    Route::get('live', [LearnerLiveSessionController::class, 'create'])
+                        ->name('live-sessions.create');
+                    Route::post('live', [LearnerLiveSessionController::class, 'store'])
+                        ->middleware('throttle:live-session-join')
+                        ->name('live-sessions.store');
+                    Route::get('live-sessions/{liveSession}', [LearnerLiveSessionController::class, 'show'])
+                        ->name('live-sessions.show');
                     Route::get('quizzes', [LearnerQuizController::class, 'index'])->name('quizzes.index');
                     Route::get('quizzes/{quiz}', [LearnerQuizController::class, 'show'])->name('quizzes.show');
                     Route::post('quizzes/{quiz}/attempts', [QuizAttemptController::class, 'store'])

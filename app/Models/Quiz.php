@@ -82,4 +82,10 @@ class Quiz extends Model
     {
         return $this->hasMany(QuizAttempt::class);
     }
+
+    /** @return HasMany<LiveSession, $this> */
+    public function liveSessions(): HasMany
+    {
+        return $this->hasMany(LiveSession::class);
+    }
 }

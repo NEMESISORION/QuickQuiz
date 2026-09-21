@@ -31,6 +31,9 @@
                             Quizzes
                         </a>
                     @else
+                        <a href="{{ route('learner.live-sessions.create') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('learner.live-sessions.*')) aria-current="page" @endif>
+                            Join live
+                        </a>
                         <a href="{{ route('learner.quizzes.index') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('learner.quizzes.*')) aria-current="page" @endif>
                             Discover
                         </a>
