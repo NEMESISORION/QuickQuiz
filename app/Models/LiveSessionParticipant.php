@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -43,5 +44,11 @@ class LiveSessionParticipant extends Model
     public function learner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'learner_id');
+    }
+
+    /** @return HasMany<LiveSessionResponse, $this> */
+    public function responses(): HasMany
+    {
+        return $this->hasMany(LiveSessionResponse::class);
     }
 }

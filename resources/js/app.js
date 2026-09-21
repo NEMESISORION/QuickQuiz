@@ -104,4 +104,38 @@ Alpine.data('quizAttempt', ({ answerUrls, initialAnswers, remainingSeconds, resu
     },
 }));
 
+Alpine.data('liveSessionSync', ({ stateUrl, initialVersion }) => ({
+    currentVersion: initialVersion,
+    polling: false,
+    timer: null,
+
+    init() {
+        this.timer = window.setInterval(() => this.poll(), 2000);
+    },
+
+    destroy() {
+        if (this.timer) window.clearInterval(this.timer);
+    },
+
+    async poll() {
+        if (this.polling || document.hidden) return;
+        this.polling = true;
+
+        try {
+            const response = await fetch(stateUrl, {
+                credentials: 'same-origin',
+                headers: { Accept: 'application/json' },
+            });
+            if (!response.ok) return;
+
+            const payload = await response.json();
+            if (payload.version !== this.currentVersion) {
+                window.location.reload();
+            }
+        } finally {
+            this.polling = false;
+        }
+    },
+}));
+
 Alpine.start();
