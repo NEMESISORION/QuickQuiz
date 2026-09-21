@@ -29,7 +29,7 @@ class LiveSessionGameplayTest extends TestCase
         $liveSession->refresh();
         $this->assertSame(LiveSessionStatus::Active, $liveSession->status);
         $this->assertSame($firstQuestion->getKey(), $liveSession->current_question_id);
-        $this->assertTrue(now()->equalTo($liveSession->started_at));
+        $this->assertSame(now()->format('Y-m-d H:i:s'), $liveSession->started_at?->format('Y-m-d H:i:s'));
     }
 
     public function test_host_cannot_start_an_empty_lobby(): void
@@ -129,8 +129,8 @@ class LiveSessionGameplayTest extends TestCase
         [, $liveSession, $question] = $this->activeSession();
         $learner = User::factory()->learner()->create();
         $participant = LiveSessionParticipant::factory()->for($liveSession)->for($learner, 'learner')->create();
-        $firstOption = AnswerOption::factory()->for($question)->create();
-        $secondOption = AnswerOption::factory()->correct()->for($question)->create();
+        $firstOption = AnswerOption::factory()->for($question)->create(['position' => 1]);
+        $secondOption = AnswerOption::factory()->correct()->for($question)->create(['position' => 2]);
         LiveSessionResponse::factory()->for($participant, 'participant')->for($question)->for($firstOption, 'answerOption')->create();
 
         $this->actingAs($learner)
