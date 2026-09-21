@@ -4,7 +4,7 @@
         <h1 class="mt-5 text-4xl font-black tracking-tight sm:text-5xl">Focus on the question in front of you.</h1>
         <p class="mt-4 max-w-2xl text-lg leading-8 text-muted">Find released assessments, review the rules, and begin when you are ready.</p>
 
-        <div class="mt-7 flex flex-wrap gap-3"><x-ui.button href="{{ route('learner.quizzes.index') }}">Discover assessments</x-ui.button><x-ui.button href="{{ route('learner.attempts.index') }}" variant="secondary">View attempt history</x-ui.button></div>
+        <div class="mt-7 flex flex-wrap gap-3"><x-ui.button href="{{ route('learner.live-sessions.create') }}">Join live session</x-ui.button><x-ui.button href="{{ route('learner.quizzes.index') }}" variant="secondary">Discover assessments</x-ui.button><x-ui.button href="{{ route('learner.attempts.index') }}" variant="secondary">View attempt history</x-ui.button></div>
 
         <div class="mt-10 grid gap-5 md:grid-cols-3">
             <x-ui.panel class="p-6"><p class="text-sm font-black uppercase tracking-wider text-accent-700">Discover</p><p class="mt-3 font-bold">Find available assessments</p></x-ui.panel>

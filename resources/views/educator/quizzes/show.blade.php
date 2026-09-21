@@ -107,6 +107,17 @@
         </div>
 
         <aside class="lg:sticky lg:top-6">
+            @if ($quiz->status === \App\Enums\QuizStatus::Published)
+                <x-ui.panel class="mb-5 p-6">
+                    <p class="text-xs font-black uppercase tracking-[0.16em] text-accent-700">Live delivery</p>
+                    <h2 class="mt-2 text-xl font-black">Bring learners together</h2>
+                    <p class="mt-2 text-sm leading-6 text-muted">Open a controlled lobby and share a short join code.</p>
+                    <form method="POST" action="{{ route('educator.quizzes.live-sessions.store', $quiz) }}" class="mt-5">
+                        @csrf
+                        <x-ui.button type="submit" class="w-full">Open live lobby</x-ui.button>
+                    </form>
+                </x-ui.panel>
+            @endif
             <x-ui.panel class="p-6">
                 <p class="text-xs font-black uppercase tracking-[0.16em] text-muted">Delivery contract</p>
                 <dl class="mt-5 flex flex-col gap-4 text-sm">

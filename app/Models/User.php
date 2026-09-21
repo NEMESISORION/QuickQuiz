@@ -65,4 +65,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(QuizAttempt::class, 'learner_id');
     }
+
+    /** @return HasMany<LiveSession, $this> */
+    public function hostedLiveSessions(): HasMany
+    {
+        return $this->hasMany(LiveSession::class, 'host_id');
+    }
+
+    /** @return HasMany<LiveSessionParticipant, $this> */
+    public function liveSessionParticipations(): HasMany
+    {
+        return $this->hasMany(LiveSessionParticipant::class, 'learner_id');
+    }
 }
