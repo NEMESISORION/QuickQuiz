@@ -7,6 +7,8 @@ use App\Models\QuizAttempt;
 
 class ExpireQuizAttempt
 {
+    public function __construct(private SubmitQuizAttempt $submitQuizAttempt) {}
+
     public function handle(QuizAttempt $attempt): bool
     {
         if ($attempt->status !== QuizAttemptStatus::InProgress
@@ -15,7 +17,7 @@ class ExpireQuizAttempt
             return false;
         }
 
-        $attempt->update(['status' => QuizAttemptStatus::Expired]);
+        $this->submitQuizAttempt->handle($attempt);
 
         return true;
     }

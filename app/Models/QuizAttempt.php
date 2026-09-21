@@ -18,10 +18,12 @@ use Illuminate\Support\Carbon;
  * @property Carbon $started_at
  * @property Carbon|null $expires_at
  * @property Carbon|null $submitted_at
+ * @property Carbon|null $review_available_at_snapshot
  */
 #[Fillable([
     'status', 'attempt_number', 'started_at', 'expires_at', 'submitted_at',
     'duration_minutes_snapshot', 'pass_percentage_snapshot', 'review_policy_snapshot',
+    'review_available_at_snapshot',
     'max_score', 'score', 'passed',
 ])]
 class QuizAttempt extends Model
@@ -40,6 +42,7 @@ class QuizAttempt extends Model
             'duration_minutes_snapshot' => 'integer',
             'pass_percentage_snapshot' => 'integer',
             'review_policy_snapshot' => QuizReviewPolicy::class,
+            'review_available_at_snapshot' => 'datetime',
             'max_score' => 'integer',
             'score' => 'integer',
             'passed' => 'boolean',

@@ -58,6 +58,7 @@ class StartQuizAttempt
                 'duration_minutes_snapshot' => $lockedQuiz->duration_minutes,
                 'pass_percentage_snapshot' => $lockedQuiz->pass_percentage,
                 'review_policy_snapshot' => $lockedQuiz->review_policy,
+                'review_available_at_snapshot' => $lockedQuiz->closes_at,
                 'max_score' => $questions->sum('points'),
             ]);
             $attempt->quiz()->associate($lockedQuiz);

@@ -42,7 +42,7 @@ class QuizAttemptExperienceTest extends TestCase
             ->assertViewHas('attempt', fn (QuizAttempt $viewAttempt): bool => $viewAttempt->answers->contains('quiz_attempt_option_id', $option->id));
     }
 
-    public function test_expired_attempt_is_closed_and_redirected_before_questions_render(): void
+    public function test_expired_attempt_is_scored_and_redirected_to_result_before_questions_render(): void
     {
         $learner = User::factory()->learner()->create();
         $attempt = QuizAttempt::factory()->for($learner, 'learner')->create([
@@ -51,9 +51,13 @@ class QuizAttemptExperienceTest extends TestCase
 
         $this->actingAs($learner)
             ->get(route('learner.attempts.show', $attempt))
-            ->assertRedirect(route('learner.quizzes.show', $attempt->quiz_id))
-            ->assertSessionHasErrors(['quiz' => 'Time has expired for this attempt.']);
+            ->assertRedirect(route('learner.attempts.result', $attempt))
+            ->assertSessionHas('status', 'Time expired, so your saved answers were submitted automatically.');
 
-        $this->assertSame(QuizAttemptStatus::Expired, $attempt->fresh()?->status);
+        $attempt->refresh();
+        $this->assertSame(QuizAttemptStatus::Expired, $attempt->status);
+        $this->assertSame(0, $attempt->score);
+        $this->assertFalse($attempt->passed);
+        $this->assertNotNull($attempt->submitted_at);
     }
 }

@@ -32,6 +32,7 @@ class QuizAttemptFactory extends Factory
             'duration_minutes_snapshot' => 20,
             'pass_percentage_snapshot' => 70,
             'review_policy_snapshot' => QuizReviewPolicy::Immediately,
+            'review_available_at_snapshot' => null,
             'max_score' => 1,
             'score' => null,
             'passed' => null,

@@ -73,6 +73,24 @@ class LearnerQuizAccessTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_quiz_overview_links_to_the_learners_latest_result(): void
+    {
+        $this->withoutVite();
+        $learner = User::factory()->learner()->create();
+        $quiz = $this->releasedQuiz(['max_attempts' => 2]);
+        $result = QuizAttempt::factory()->for($quiz)->for($learner, 'learner')->create([
+            'status' => QuizAttemptStatus::Submitted,
+            'submitted_at' => now(),
+            'score' => 1,
+            'passed' => true,
+        ]);
+
+        $this->actingAs($learner)->get(route('learner.quizzes.show', $quiz))
+            ->assertOk()
+            ->assertSeeText('Latest result')
+            ->assertSee(route('learner.attempts.result', $result));
+    }
+
     /** @param array<string, mixed> $attributes */
     private function releasedQuiz(array $attributes = []): Quiz
     {

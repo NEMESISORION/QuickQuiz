@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Attempts\QuizAvailability;
+use App\Enums\QuizAttemptStatus;
 use App\Enums\QuizStatus;
 use App\Models\Quiz;
 use App\Models\User;
@@ -46,6 +47,12 @@ class LearnerQuizController extends Controller
         assert($user instanceof User);
 
         $quiz->loadCount('questions');
+        $latestResult = $quiz->attempts()
+            ->whereBelongsTo($user, 'learner')
+            ->whereIn('status', [QuizAttemptStatus::Submitted, QuizAttemptStatus::Expired])
+            ->latest('submitted_at')
+            ->latest('id')
+            ->first();
 
         return view('learner.quizzes.show', [
             'quiz' => $quiz,
@@ -53,6 +60,7 @@ class LearnerQuizController extends Controller
             'isUpcoming' => $this->availability->isUpcoming($quiz),
             'activeAttempt' => $this->availability->activeAttempt($quiz, $user),
             'attemptsRemaining' => $this->availability->attemptsRemaining($quiz, $user),
+            'latestResult' => $latestResult,
         ]);
     }
 }

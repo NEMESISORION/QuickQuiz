@@ -11,6 +11,8 @@ use Illuminate\Validation\ValidationException;
 
 class SaveQuizAttemptAnswer
 {
+    public function __construct(private ScoreQuizAttempt $scoreQuizAttempt) {}
+
     public function handle(QuizAttempt $attempt, QuizAttemptQuestion $question, int $optionId): QuizAttemptAnswer
     {
         $failureMessage = null;
@@ -24,7 +26,7 @@ class SaveQuizAttemptAnswer
             }
 
             if ($lockedAttempt->expires_at !== null && ! $lockedAttempt->expires_at->isFuture()) {
-                $lockedAttempt->update(['status' => QuizAttemptStatus::Expired]);
+                $this->scoreQuizAttempt->handle($lockedAttempt, QuizAttemptStatus::Expired);
                 $failureMessage = 'Time has expired for this attempt.';
 
                 return null;

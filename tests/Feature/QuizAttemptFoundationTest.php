@@ -21,7 +21,11 @@ class QuizAttemptFoundationTest extends TestCase
     public function test_starting_an_attempt_snapshots_questions_options_and_delivery_rules(): void
     {
         $this->travelTo('2026-09-20 12:00:00');
-        [$quiz, $question] = $this->releasedQuiz(['duration_minutes' => 25, 'pass_percentage' => 80]);
+        [$quiz, $question] = $this->releasedQuiz([
+            'duration_minutes' => 25,
+            'pass_percentage' => 80,
+            'closes_at' => now()->addHours(2),
+        ]);
         $learner = User::factory()->learner()->create();
 
         $attempt = app(StartQuizAttempt::class)->handle($quiz, $learner);
@@ -30,6 +34,7 @@ class QuizAttemptFoundationTest extends TestCase
         $this->assertSame(1, $attempt->attempt_number);
         $this->assertSame('2026-09-20 12:25:00', $attempt->expires_at?->format('Y-m-d H:i:s'));
         $this->assertSame(80, $attempt->pass_percentage_snapshot);
+        $this->assertSame('2026-09-20 14:00:00', $attempt->review_available_at_snapshot?->format('Y-m-d H:i:s'));
         $this->assertSame(3, $attempt->max_score);
         $this->assertSame($question->prompt, $attempt->questions->first()?->prompt);
         $this->assertSame([false, true], $attempt->questions->first()?->options->pluck('is_correct')->all());

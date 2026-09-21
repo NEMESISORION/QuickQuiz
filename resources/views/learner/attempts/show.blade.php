@@ -6,10 +6,18 @@
         $initialAnswers = $attempt->answers->mapWithKeys(fn ($answer) => [
             (string) $answer->quiz_attempt_question_id => (string) $answer->quiz_attempt_option_id,
         ]);
+        $remainingSeconds = $attempt->expires_at
+            ? max(0, $attempt->expires_at->timestamp - now()->timestamp)
+            : null;
     @endphp
 
     <section
-        x-data="quizAttempt({{ Js::from(['answerUrls' => $answerUrls, 'initialAnswers' => $initialAnswers, 'expiresAt' => $attempt->expires_at?->toIso8601String()]) }})"
+        x-data="quizAttempt({{ Js::from([
+            'answerUrls' => $answerUrls,
+            'initialAnswers' => $initialAnswers,
+            'remainingSeconds' => $remainingSeconds,
+            'resultUrl' => route('learner.attempts.result', $attempt),
+        ]) }})"
         class="mx-auto max-w-6xl"
     >
         <header class="grid gap-5 border-b border-line pb-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
@@ -46,9 +54,14 @@
 
                 <nav class="mt-6 flex items-center justify-between gap-4" aria-label="Question navigation">
                     <x-ui.button type="button" variant="secondary" x-show="current > 0" @click="current--">Previous</x-ui.button><span x-show="current === 0" aria-hidden="true"></span>
-                    <x-ui.button type="button" x-show="current < {{ $attempt->questions->count() - 1 }}" @click="current++">Next question</x-ui.button><span x-show="current === {{ $attempt->questions->count() - 1 }}" class="text-sm font-bold text-muted">Review and submission arrive in Round 4C.</span>
+                    <x-ui.button type="button" x-show="current < {{ $attempt->questions->count() - 1 }}" @click="current++">Next question</x-ui.button>
+                    <form x-show="current === {{ $attempt->questions->count() - 1 }}" method="POST" action="{{ route('learner.attempts.submission.store', $attempt) }}" @submit="submitAttempt($event)">
+                        @csrf
+                        <x-ui.button type="submit">Submit attempt</x-ui.button>
+                    </form>
                 </nav>
                 <p class="mt-5 min-h-6 text-center text-sm font-bold" :class="saveState === 'error' || expired ? 'text-danger' : 'text-muted'" aria-live="polite" x-text="message"></p>
+                <p x-show="current === {{ $attempt->questions->count() - 1 }} && answeredCount < {{ $attempt->questions->count() }}" class="mt-2 text-center text-sm font-semibold text-warning"><span x-text="{{ $attempt->questions->count() }} - answeredCount"></span> unanswered. You may still submit.</p>
             </main>
 
             <aside class="lg:sticky lg:top-6"><x-ui.panel class="p-5"><p class="text-xs font-black uppercase tracking-[0.16em] text-muted">Question map</p><div class="mt-4 grid grid-cols-5 gap-2 lg:grid-cols-4">
