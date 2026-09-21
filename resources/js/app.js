@@ -2,12 +2,12 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
-Alpine.data('quizAttempt', ({ answerUrls, initialAnswers, expiresAt }) => ({
+Alpine.data('quizAttempt', ({ answerUrls, initialAnswers, remainingSeconds, resultUrl }) => ({
     current: 0,
     answers: { ...initialAnswers },
     answerUrls,
-    expiresAt,
-    remainingSeconds: null,
+    remainingSeconds,
+    resultUrl,
     saveState: 'idle',
     message: '',
     expired: false,
@@ -15,9 +15,8 @@ Alpine.data('quizAttempt', ({ answerUrls, initialAnswers, expiresAt }) => ({
     saveQueue: Promise.resolve(),
 
     init() {
-        this.updateTimer();
-        if (this.expiresAt) {
-            this.timer = window.setInterval(() => this.updateTimer(), 1000);
+        if (this.remainingSeconds !== null) {
+            this.timer = window.setInterval(() => this.tickTimer(), 1000);
         }
     },
 
@@ -45,14 +44,28 @@ Alpine.data('quizAttempt', ({ answerUrls, initialAnswers, expiresAt }) => ({
             : `${minutes}:${String(seconds).padStart(2, '0')}`;
     },
 
-    updateTimer() {
-        if (!this.expiresAt) return;
-        this.remainingSeconds = Math.max(0, Math.ceil((new Date(this.expiresAt).getTime() - Date.now()) / 1000));
+    tickTimer() {
+        this.remainingSeconds = Math.max(0, this.remainingSeconds - 1);
         if (this.remainingSeconds === 0) {
             this.expired = true;
-            this.message = 'Time has expired. Answers can no longer be changed.';
+            this.message = 'Time has expired. Finalizing your saved answers…';
             window.clearInterval(this.timer);
+            window.location.assign(this.resultUrl);
         }
+    },
+
+    async submitAttempt(event) {
+        event.preventDefault();
+        if (!window.confirm('Submit this attempt? You cannot change answers afterward.')) return;
+
+        this.message = 'Finishing your latest save…';
+        await this.saveQueue.catch(() => {});
+        if (this.saveState === 'error') {
+            this.message = 'Resolve the save error before submitting.';
+            return;
+        }
+
+        event.currentTarget.submit();
     },
 
     saveAnswer(questionId, optionId) {

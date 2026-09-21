@@ -33,14 +33,12 @@ class QuizAttemptController extends Controller
         Gate::authorize('view', $quizAttempt);
         if ($expireQuizAttempt->handle($quizAttempt)) {
             return redirect()
-                ->route('learner.quizzes.show', $quizAttempt->quiz_id)
-                ->withErrors(['quiz' => 'Time has expired for this attempt.']);
+                ->route('learner.attempts.result', $quizAttempt)
+                ->with('status', 'Time expired, so your saved answers were submitted automatically.');
         }
 
         if ($quizAttempt->status !== QuizAttemptStatus::InProgress) {
-            return redirect()
-                ->route('learner.quizzes.show', $quizAttempt->quiz_id)
-                ->withErrors(['quiz' => 'This attempt is no longer active.']);
+            return redirect()->route('learner.attempts.result', $quizAttempt);
         }
 
         $quizAttempt->load(['quiz', 'questions.options', 'answers']);

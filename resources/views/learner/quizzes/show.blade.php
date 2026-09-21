@@ -22,6 +22,13 @@
                     <h2 class="mt-2 text-2xl font-black">No attempts remaining.</h2><p class="mt-2 leading-7 text-muted">You have reached the attempt limit for this assessment.</p>
                 @endif
             </x-ui.panel>
+
+            @if ($latestResult)
+                <div class="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-white px-5 py-4">
+                    <div><p class="font-black">Latest result</p><p class="mt-1 text-sm font-semibold text-muted">Attempt {{ $latestResult->attempt_number }} · {{ $latestResult->submitted_at?->diffForHumans() }}</p></div>
+                    <x-ui.button href="{{ route('learner.attempts.result', $latestResult) }}" variant="secondary">View result</x-ui.button>
+                </div>
+            @endif
         </div>
         <aside class="lg:sticky lg:top-6"><x-ui.panel class="p-6"><p class="text-xs font-black uppercase tracking-[0.16em] text-muted">Assessment rules</p><dl class="mt-5 flex flex-col gap-4 text-sm"><div class="flex justify-between gap-4"><dt class="text-muted">Questions</dt><dd class="font-bold">{{ $quiz->questions_count }}</dd></div><div class="flex justify-between gap-4"><dt class="text-muted">Time limit</dt><dd class="font-bold">{{ $quiz->duration_minutes ? $quiz->duration_minutes.' min' : 'None' }}</dd></div><div class="flex justify-between gap-4"><dt class="text-muted">Passing score</dt><dd class="font-bold">{{ $quiz->pass_percentage }}%</dd></div><div class="flex justify-between gap-4"><dt class="text-muted">Attempts left</dt><dd class="font-bold">{{ $attemptsRemaining }}</dd></div><div class="flex justify-between gap-4"><dt class="text-muted">Review</dt><dd class="max-w-40 text-right font-bold">{{ $quiz->review_policy->label() }}</dd></div></dl></x-ui.panel></aside>
     </section>

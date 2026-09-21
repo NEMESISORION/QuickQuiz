@@ -15,6 +15,8 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionPositionController;
 use App\Http\Controllers\QuizAttemptAnswerController;
 use App\Http\Controllers\QuizAttemptController;
+use App\Http\Controllers\QuizAttemptResultController;
+use App\Http\Controllers\QuizAttemptSubmissionController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizPreviewController;
 use App\Http\Controllers\QuizPublicationController;
@@ -89,6 +91,11 @@ Route::middleware('auth')->group(function (): void {
                         ->name('quizzes.attempts.store');
                     Route::get('attempts/{quizAttempt}', [QuizAttemptController::class, 'show'])
                         ->name('attempts.show');
+                    Route::post('attempts/{quizAttempt}/submission', [QuizAttemptSubmissionController::class, 'store'])
+                        ->middleware('throttle:10,1')
+                        ->name('attempts.submission.store');
+                    Route::get('attempts/{quizAttempt}/result', QuizAttemptResultController::class)
+                        ->name('attempts.result');
                     Route::put('attempts/{quizAttempt}/questions/{quizAttemptQuestion}/answer', QuizAttemptAnswerController::class)
                         ->middleware('throttle:120,1')
                         ->name('attempts.answers.update');

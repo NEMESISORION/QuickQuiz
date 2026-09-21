@@ -95,7 +95,11 @@ class QuizAttemptAnswerTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['attempt']);
 
-        $this->assertSame(QuizAttemptStatus::Expired, $attempt->fresh()?->status);
+        $attempt->refresh();
+        $this->assertSame(QuizAttemptStatus::Expired, $attempt->status);
+        $this->assertSame(0, $attempt->score);
+        $this->assertFalse($attempt->passed);
+        $this->assertNotNull($attempt->submitted_at);
         $this->assertSame(0, QuizAttemptAnswer::query()->count());
     }
 
