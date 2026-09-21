@@ -67,6 +67,11 @@ class QuizPolicy
         return $this->discover($user, $quiz);
     }
 
+    public function viewResults(User $user, Quiz $quiz): bool
+    {
+        return $this->owns($user, $quiz);
+    }
+
     private function owns(User $user, Quiz $quiz): bool
     {
         return $user->hasRole(UserRole::Educator) && $quiz->educator_id === $user->getKey();

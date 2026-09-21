@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EducatorQuizResultController;
+use App\Http\Controllers\LearnerAttemptHistoryController;
 use App\Http\Controllers\LearnerQuizController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
@@ -68,6 +70,8 @@ Route::middleware('auth')->group(function (): void {
                 ->group(function (): void {
                     Route::view('/', 'educator.dashboard')->name('dashboard');
                     Route::resource('quizzes', QuizController::class);
+                    Route::get('quizzes/{quiz}/results', [EducatorQuizResultController::class, 'index'])
+                        ->name('quizzes.results.index');
                     Route::scopeBindings()->group(function (): void {
                         Route::resource('quizzes.questions', QuestionController::class)
                             ->except(['index', 'show']);
@@ -85,6 +89,7 @@ Route::middleware('auth')->group(function (): void {
                 ->name('learner.')
                 ->group(function (): void {
                     Route::view('/', 'learner.dashboard')->name('dashboard');
+                    Route::get('attempts', LearnerAttemptHistoryController::class)->name('attempts.index');
                     Route::get('quizzes', [LearnerQuizController::class, 'index'])->name('quizzes.index');
                     Route::get('quizzes/{quiz}', [LearnerQuizController::class, 'show'])->name('quizzes.show');
                     Route::post('quizzes/{quiz}/attempts', [QuizAttemptController::class, 'store'])
