@@ -34,6 +34,7 @@
                     <x-ui.button href="{{ route('educator.quizzes.questions.create', $quiz) }}" variant="secondary">Add question</x-ui.button>
                 @endcan
                 <x-ui.button href="{{ route('educator.quizzes.preview', $quiz) }}" variant="secondary">Learner preview</x-ui.button>
+                <x-ui.button href="{{ route('educator.quizzes.results.index', $quiz) }}" variant="secondary">View results</x-ui.button>
             </div>
 
             <section class="mt-10" aria-labelledby="questions-title">
