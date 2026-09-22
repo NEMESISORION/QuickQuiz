@@ -53,8 +53,8 @@
 
                 <nav class="mt-6 flex items-center justify-between gap-4" aria-label="Question navigation">
                     <x-ui.button type="button" variant="secondary" data-attempt-previous hidden>Previous</x-ui.button><span data-attempt-first-spacer aria-hidden="true"></span>
-                    <x-ui.button type="button" data-attempt-next @if ($attempt->questions->count() === 1) hidden @endif>Next question</x-ui.button>
-                    <form data-attempt-submit @if ($attempt->questions->count() !== 1) hidden @endif method="POST" action="{{ route('learner.attempts.submission.store', $attempt) }}">
+                    <x-ui.button type="button" data-attempt-next hidden>Next question</x-ui.button>
+                    <form data-attempt-submit hidden method="POST" action="{{ route('learner.attempts.submission.store', $attempt) }}">
                         @csrf
                         <x-ui.button type="submit">Submit attempt</x-ui.button>
                     </form>
