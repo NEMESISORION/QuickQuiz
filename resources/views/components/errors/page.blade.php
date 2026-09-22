@@ -5,25 +5,30 @@
 ])
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="system-theme">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noindex, nofollow">
         <meta name="theme-color" content="#4f46e5">
         <title>{{ $code }} · {{ $title }} · {{ config('app.name') }}</title>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="{{ asset('error.css') }}">
     </head>
-    <body class="min-h-screen bg-canvas px-5 py-10 text-ink antialiased">
-        <main class="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl items-center justify-center">
-            <section class="w-full rounded-3xl border border-line bg-white p-8 text-center shadow-soft sm:p-14">
-                <a class="inline-flex" href="{{ route('landing') }}" aria-label="QuickQuiz home"><x-brand.mark /></a>
-                <p class="mt-10 text-sm font-black uppercase tracking-[0.24em] text-brand-700">Error {{ $code }}</p>
-                <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{{ $title }}</h1>
-                <p class="mx-auto mt-4 max-w-xl text-lg leading-8 text-muted">{{ $message }}</p>
-                <div class="mt-8 flex flex-wrap justify-center gap-3">
-                    <x-ui.button href="{{ route('landing') }}">Go home</x-ui.button>
-                    @auth<x-ui.button href="{{ route('dashboard') }}" variant="secondary">Open workspace</x-ui.button>@endauth
+    <body>
+        <main class="error-shell">
+            <section class="error-card">
+                <a class="error-brand" href="{{ route('landing') }}" aria-label="QuickQuiz home">
+                    <span class="error-mark" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M13.7 2.75 5.5 13.1h5.35l-.7 8.15 8.35-11.1h-5.45l.65-7.4Z" fill="currentColor" /></svg>
+                    </span>
+                    <span>QuickQuiz</span>
+                </a>
+                <p class="error-code">Error {{ $code }}</p>
+                <h1>{{ $title }}</h1>
+                <p class="error-message">{{ $message }}</p>
+                <div class="error-actions">
+                    <a class="error-button error-button-primary" href="{{ route('landing') }}">Go home</a>
+                    @auth<a class="error-button error-button-secondary" href="{{ route('dashboard') }}">Open workspace</a>@endauth
                 </div>
             </section>
         </main>
