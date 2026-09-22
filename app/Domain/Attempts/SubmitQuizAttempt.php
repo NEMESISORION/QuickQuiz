@@ -2,13 +2,17 @@
 
 namespace App\Domain\Attempts;
 
+use App\Domain\Certificates\IssueCertificate;
 use App\Enums\QuizAttemptStatus;
 use App\Models\QuizAttempt;
 use Illuminate\Support\Facades\DB;
 
 class SubmitQuizAttempt
 {
-    public function __construct(private ScoreQuizAttempt $scoreQuizAttempt) {}
+    public function __construct(
+        private ScoreQuizAttempt $scoreQuizAttempt,
+        private IssueCertificate $issueCertificate,
+    ) {}
 
     public function handle(QuizAttempt $attempt): QuizAttempt
     {
@@ -17,8 +21,10 @@ class SubmitQuizAttempt
 
             if ($lockedAttempt->status !== QuizAttemptStatus::InProgress) {
                 if ($lockedAttempt->score === null) {
-                    return $this->scoreQuizAttempt->handle($lockedAttempt, $lockedAttempt->status);
+                    $lockedAttempt = $this->scoreQuizAttempt->handle($lockedAttempt, $lockedAttempt->status);
                 }
+
+                $this->issueCertificate->handle($lockedAttempt);
 
                 return $lockedAttempt;
             }
@@ -27,7 +33,10 @@ class SubmitQuizAttempt
                 ? QuizAttemptStatus::Expired
                 : QuizAttemptStatus::Submitted;
 
-            return $this->scoreQuizAttempt->handle($lockedAttempt, $status);
+            $lockedAttempt = $this->scoreQuizAttempt->handle($lockedAttempt, $status);
+            $this->issueCertificate->handle($lockedAttempt);
+
+            return $lockedAttempt;
         }, 3);
     }
 }

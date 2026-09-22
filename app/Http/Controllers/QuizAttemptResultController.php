@@ -27,7 +27,7 @@ class QuizAttemptResultController extends Controller
             return redirect()->route('learner.attempts.show', $quizAttempt);
         }
 
-        $quizAttempt = $submitQuizAttempt->handle($quizAttempt)->load('quiz');
+        $quizAttempt = $submitQuizAttempt->handle($quizAttempt)->load(['quiz', 'certificate']);
 
         $answersAreVisible = $review->answersAreVisible($quizAttempt);
         if ($answersAreVisible) {

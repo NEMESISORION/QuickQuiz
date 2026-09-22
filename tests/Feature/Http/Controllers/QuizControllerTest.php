@@ -86,6 +86,7 @@ class QuizControllerTest extends TestCase
         $this->assertSame(QuizReviewPolicy::AfterClose, $quiz->review_policy);
         $this->assertTrue($quiz->shuffle_questions);
         $this->assertFalse($quiz->shuffle_answers);
+        $this->assertTrue($quiz->certificates_enabled);
     }
 
     public function test_invalid_payload_returns_specific_errors_without_creating_quiz(): void
@@ -215,6 +216,7 @@ class QuizControllerTest extends TestCase
             'shuffle_questions' => true,
             'shuffle_answers' => false,
             'review_policy' => QuizReviewPolicy::AfterClose->value,
+            'certificates_enabled' => true,
         ];
     }
 }

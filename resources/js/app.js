@@ -1,5 +1,7 @@
 import Alpine from 'alpinejs';
 
+document.querySelector('[data-print-page]')?.addEventListener('click', () => window.print());
+
 window.Alpine = Alpine;
 
 Alpine.data('quizAttempt', ({ answerUrls, initialAnswers, remainingSeconds, resultUrl }) => ({

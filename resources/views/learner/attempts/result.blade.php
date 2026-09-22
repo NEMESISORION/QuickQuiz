@@ -25,6 +25,17 @@
             </dl>
         </div>
 
+        @if ($attempt->certificate)
+            <x-ui.panel class="mt-8 border-brand-200 bg-brand-50/60 p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.16em] text-brand-700">Achievement verified</p>
+                    <h2 class="mt-2 text-2xl font-black">Your certificate is ready.</h2>
+                    <p class="mt-2 leading-7 text-muted">Open the public verification page, then print or save it as a PDF.</p>
+                </div>
+                <x-ui.button class="mt-5 shrink-0 sm:mt-0" href="{{ route('certificates.show', $attempt->certificate->verification_code) }}">View certificate</x-ui.button>
+            </x-ui.panel>
+        @endif
+
         @if ($answersAreVisible)
             <section class="mt-10" aria-labelledby="review-title">
                 <p class="text-sm font-black uppercase tracking-[0.16em] text-accent-700">Learning review</p><h2 id="review-title" class="mt-2 text-3xl font-black">Review your answers</h2>
