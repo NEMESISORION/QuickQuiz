@@ -2,6 +2,17 @@ import Alpine from 'alpinejs';
 
 document.querySelector('[data-print-page]')?.addEventListener('click', () => window.print());
 
+document.addEventListener('submit', (event) => {
+    if (event.defaultPrevented || !(event.target instanceof HTMLFormElement) || !event.target.checkValidity()) return;
+
+    event.target.setAttribute('aria-busy', 'true');
+    window.requestAnimationFrame(() => {
+        event.target.querySelectorAll('[type="submit"]').forEach((button) => {
+            button.disabled = true;
+        });
+    });
+});
+
 window.Alpine = Alpine;
 
 Alpine.data('quizAttempt', ({ answerUrls, initialAnswers, remainingSeconds, resultUrl }) => ({
