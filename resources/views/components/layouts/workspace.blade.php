@@ -30,6 +30,9 @@
                         <a href="{{ route('educator.quizzes.index') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('educator.quizzes.*')) aria-current="page" @endif>
                             Quizzes
                         </a>
+                        <a href="{{ route('educator.analytics.index') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('educator.analytics.*')) aria-current="page" @endif>
+                            Analytics
+                        </a>
                     @else
                         <a href="{{ route('learner.live-sessions.create') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('learner.live-sessions.*')) aria-current="page" @endif>
                             Join live

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EducatorAnalyticsController;
 use App\Http\Controllers\EducatorLiveSessionController;
 use App\Http\Controllers\EducatorQuizResultController;
 use App\Http\Controllers\LearnerAttemptHistoryController;
@@ -74,6 +75,7 @@ Route::middleware('auth')->group(function (): void {
                 ->name('educator.')
                 ->group(function (): void {
                     Route::view('/', 'educator.dashboard')->name('dashboard');
+                    Route::get('analytics', EducatorAnalyticsController::class)->name('analytics.index');
                     Route::resource('quizzes', QuizController::class);
                     Route::get('quizzes/{quiz}/results', [EducatorQuizResultController::class, 'index'])
                         ->name('quizzes.results.index');
