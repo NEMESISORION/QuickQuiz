@@ -19,8 +19,11 @@ use App\Http\Controllers\LearnerQuizController;
 use App\Http\Controllers\LiveSessionAnswerController;
 use App\Http\Controllers\LiveSessionControlController;
 use App\Http\Controllers\LiveSessionStateController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationReadController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilePreferenceController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionPositionController;
 use App\Http\Controllers\QuizAttemptAnswerController;
@@ -145,8 +148,14 @@ Route::middleware('auth')->group(function (): void {
 
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::patch('/profile/preferences', [ProfilePreferenceController::class, 'update'])
+                ->name('profile.preferences.update');
             Route::get('/profile/security', SecurityActivityController::class)
                 ->name('profile.security');
+            Route::get('/notifications', [NotificationController::class, 'index'])
+                ->name('notifications.index');
+            Route::post('/notifications/read', [NotificationReadController::class, 'store'])
+                ->name('notifications.read.store');
         });
     });
 

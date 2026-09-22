@@ -8,7 +8,7 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ $currentUser->theme_preference->htmlClass() }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,6 +48,12 @@
                     <x-ui.badge tone="{{ $currentUser->role->value === 'educator' ? 'brand' : 'accent' }}">
                         {{ $currentUser->role->label() }}
                     </x-ui.badge>
+                    <a href="{{ route('notifications.index') }}" class="relative inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('notifications.*')) aria-current="page" @endif>
+                        Alerts
+                        @if (($unreadNotificationCount = $currentUser->unreadNotifications()->count()) > 0)
+                            <span class="ml-1.5 inline-flex min-w-5 items-center justify-center rounded-full bg-danger px-1.5 py-0.5 text-xs font-black text-white" aria-label="{{ $unreadNotificationCount }} unread notifications">{{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}</span>
+                        @endif
+                    </a>
                     <a href="{{ route('profile.edit') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-bold text-ink transition hover:bg-brand-50 hover:text-brand-700" @if (request()->routeIs('profile.*')) aria-current="page" @endif>
                         Profile
                     </a>

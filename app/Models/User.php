@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ThemePreference;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property UserRole|null $role
  * @property Carbon|null $role_selected_at
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'theme_preference', 'notifications_enabled'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -36,6 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'role' => UserRole::class,
             'role_selected_at' => 'datetime',
+            'theme_preference' => ThemePreference::class,
+            'notifications_enabled' => 'boolean',
         ];
     }
 
