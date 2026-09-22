@@ -8,7 +8,9 @@ use App\Models\QuizAttemptAnswer;
 use App\Models\QuizAttemptOption;
 use App\Models\QuizAttemptQuestion;
 use App\Models\User;
+use App\Notifications\AttemptCompleted;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class QuizAttemptAnswerTest extends TestCase
@@ -89,6 +91,7 @@ class QuizAttemptAnswerTest extends TestCase
     {
         [$learner, $attempt, $question, $option] = $this->attemptWithQuestion();
         $attempt->update(['expires_at' => now()->subSecond()]);
+        Notification::fake();
 
         $this->actingAs($learner)
             ->putJson(route('learner.attempts.answers.update', [$attempt, $question]), ['option_id' => $option->id])
@@ -101,6 +104,7 @@ class QuizAttemptAnswerTest extends TestCase
         $this->assertFalse($attempt->passed);
         $this->assertNotNull($attempt->submitted_at);
         $this->assertSame(0, QuizAttemptAnswer::query()->count());
+        Notification::assertSentToOnce($attempt->quiz->educator, AttemptCompleted::class);
     }
 
     /** @return array{User, QuizAttempt, QuizAttemptQuestion, QuizAttemptOption, QuizAttemptOption} */

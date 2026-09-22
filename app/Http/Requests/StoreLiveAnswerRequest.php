@@ -20,7 +20,7 @@ class StoreLiveAnswerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'answer_option_id' => ['required', 'integer', 'exists:answer_options,id'],
+            'answer_option_id' => ['required', 'integer'],
         ];
     }
 }

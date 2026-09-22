@@ -124,6 +124,23 @@ class LiveSessionGameplayTest extends TestCase
         $this->assertSame(0, LiveSessionResponse::query()->count());
     }
 
+    public function test_unknown_option_does_not_reveal_whether_an_option_exists(): void
+    {
+        [, $liveSession] = $this->activeSession();
+        $learner = User::factory()->learner()->create();
+        LiveSessionParticipant::factory()->for($liveSession)->for($learner, 'learner')->create();
+
+        $this->actingAs($learner)
+            ->post(route('learner.live-sessions.answer', $liveSession), [
+                'answer_option_id' => 999999,
+            ])
+            ->assertSessionHasErrors([
+                'answer_option_id' => 'Choose an answer from the active question.',
+            ]);
+
+        $this->assertSame(0, LiveSessionResponse::query()->count());
+    }
+
     public function test_learner_cannot_replace_a_locked_answer(): void
     {
         [, $liveSession, $question] = $this->activeSession();

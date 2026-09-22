@@ -10,7 +10,7 @@
     </div>
 @endif
 
-<form method="POST" action="{{ $action }}" class="mt-7 flex flex-col gap-7" x-data="{ questionType: @js($selectedType) }">
+<form method="POST" action="{{ $action }}" class="mt-7 flex flex-col gap-7" data-question-form>
     @csrf
     @if ($method !== 'POST') @method($method) @endif
 
@@ -18,9 +18,9 @@
         <div class="grid gap-5 sm:grid-cols-[minmax(0,1fr)_12rem]">
             <div class="flex flex-col gap-2">
                 <label for="type" class="text-sm font-bold">Question type</label>
-                <select id="type" name="type" x-model="questionType" class="min-h-12 rounded-xl border border-line bg-white px-4 py-3 focus:border-brand-500 focus:ring-4 focus:ring-brand-100">
+                <select id="type" name="type" data-question-type class="min-h-12 rounded-xl border border-line bg-white px-4 py-3 focus:border-brand-500 focus:ring-4 focus:ring-brand-100">
                     @foreach ($questionTypes as $questionType)
-                        <option value="{{ $questionType->value }}">{{ $questionType->label() }}</option>
+                        <option value="{{ $questionType->value }}" @selected($selectedType === $questionType->value)>{{ $questionType->label() }}</option>
                     @endforeach
                 </select>
                 @error('type')<p class="text-sm font-semibold text-danger">{{ $message }}</p>@enderror
@@ -38,7 +38,7 @@
         <p class="text-xs font-black uppercase tracking-[0.16em] text-accent-700">Answer key</p>
         <h2 class="mt-2 text-2xl font-black">Choose exactly one correct answer</h2>
 
-        <div x-show="questionType === 'multiple_choice'" class="mt-6 flex flex-col gap-3">
+        <div data-question-options="multiple_choice" @if ($selectedType !== 'multiple_choice') hidden @endif class="mt-6 flex flex-col gap-3">
             @for ($index = 0; $index < 4; $index++)
                 <label class="grid cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-xl border border-line p-3 hover:border-brand-200">
                     <input type="radio" name="correct_option" value="{{ $index }}" class="size-5 text-brand-600 focus:ring-brand-500" @checked((string) $correctOption === (string) $index)>
@@ -48,7 +48,7 @@
             @endfor
         </div>
 
-        <div x-cloak x-show="questionType === 'true_false'" class="mt-6 grid gap-3 sm:grid-cols-2">
+        <div data-question-options="true_false" @if ($selectedType !== 'true_false') hidden @endif class="mt-6 grid gap-3 sm:grid-cols-2">
             @foreach (['True', 'False'] as $index => $label)
                 <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-line p-5 hover:border-brand-200">
                     <input type="radio" name="correct_option" value="{{ $index }}" class="size-5 text-brand-600 focus:ring-brand-500" @checked((string) $correctOption === (string) $index)>
