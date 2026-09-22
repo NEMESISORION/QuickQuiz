@@ -8,6 +8,7 @@
             <div class="mt-7 flex flex-wrap gap-3">
                 <x-ui.button href="{{ route('educator.quizzes.create') }}">Create a quiz</x-ui.button>
                 <x-ui.button href="{{ route('educator.quizzes.index') }}" variant="secondary">Manage quizzes</x-ui.button>
+                <x-ui.button href="{{ route('educator.analytics.index') }}" variant="secondary">View analytics</x-ui.button>
             </div>
 
             <div class="mt-9 grid gap-4 sm:grid-cols-2">
