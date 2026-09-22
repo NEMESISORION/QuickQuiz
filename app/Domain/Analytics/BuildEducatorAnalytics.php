@@ -60,7 +60,7 @@ class BuildEducatorAnalytics
         ];
     }
 
-    /** @param Builder<QuizAttempt> $query */
+    /** @param  Builder<QuizAttempt>  $query */
     private function applyDateRange(Builder $query, ?Carbon $from, ?Carbon $to): void
     {
         $query
@@ -69,7 +69,7 @@ class BuildEducatorAnalytics
     }
 
     /**
-     * @param Collection<int, QuizAttempt> $attempts
+     * @param  Collection<int, QuizAttempt>  $attempts
      * @return Collection<int, array{date: string, label: string, attempts: int, average_score: int}>
      */
     private function trend(Collection $attempts): Collection
@@ -95,8 +95,8 @@ class BuildEducatorAnalytics
     }
 
     /**
-     * @param array<int, int> $quizIds
-     * @param Collection<int, string> $quizTitles
+     * @param  array<int, int>  $quizIds
+     * @param  Collection<int, string>  $quizTitles
      * @return Collection<int, array{prompt: string, quiz_title: string, presentations: int, responses: int, correctness: int, options: array<int, array{content: string, selected: int, percentage: int, is_correct: bool}>}>
      */
     private function questionAnalysis(
