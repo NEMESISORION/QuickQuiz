@@ -10,7 +10,9 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\User;
+use App\Notifications\AttemptCompleted;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -83,11 +85,15 @@ class QuizAttemptFoundationTest extends TestCase
         $expired = QuizAttempt::factory()->for($quiz)->for($learner, 'learner')->create([
             'expires_at' => now()->subMinute(),
         ]);
+        Notification::fake();
 
         $newAttempt = app(StartQuizAttempt::class)->handle($quiz, $learner);
 
         $this->assertSame(QuizAttemptStatus::Expired, $expired->fresh()?->status);
+        $this->assertSame(0, $expired->fresh()?->score);
+        $this->assertNotNull($expired->fresh()?->submitted_at);
         $this->assertSame(2, $newAttempt->attempt_number);
+        Notification::assertSentToOnce($quiz->educator, AttemptCompleted::class);
     }
 
     public function test_snapshot_does_not_change_when_the_source_question_changes(): void

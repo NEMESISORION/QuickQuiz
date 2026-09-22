@@ -14,7 +14,10 @@ use Illuminate\Validation\ValidationException;
 
 class StartQuizAttempt
 {
-    public function __construct(private QuizAvailability $availability) {}
+    public function __construct(
+        private QuizAvailability $availability,
+        private SubmitQuizAttempt $submitQuizAttempt,
+    ) {}
 
     public function handle(Quiz $quiz, User $learner): QuizAttempt
     {
@@ -23,12 +26,17 @@ class StartQuizAttempt
             User::query()->lockForUpdate()->findOrFail($learner->getKey());
             $now = now();
 
-            $lockedQuiz->attempts()
+            $expiredAttempts = $lockedQuiz->attempts()
                 ->whereBelongsTo($learner, 'learner')
                 ->where('status', QuizAttemptStatus::InProgress)
                 ->whereNotNull('expires_at')
                 ->where('expires_at', '<=', $now)
-                ->update(['status' => QuizAttemptStatus::Expired]);
+                ->lockForUpdate()
+                ->get();
+
+            foreach ($expiredAttempts as $expiredAttempt) {
+                $this->submitQuizAttempt->handle($expiredAttempt);
+            }
 
             $activeAttempt = $this->availability->activeAttempt($lockedQuiz, $learner, $now);
             if ($activeAttempt !== null) {

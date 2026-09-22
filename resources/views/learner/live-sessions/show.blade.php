@@ -1,5 +1,5 @@
 <x-layouts.workspace title="Live quiz" description="Take part in a synchronized QuickQuiz live session.">
-    <section class="mx-auto max-w-3xl" x-data="liveSessionSync({ stateUrl: {{ Js::from(route('live-sessions.state', $liveSession)) }}, initialVersion: {{ Js::from($syncVersion) }} })">
+    <section class="mx-auto max-w-3xl" data-live-session-sync data-state-url="{{ route('live-sessions.state', $liveSession) }}" data-initial-version="{{ $syncVersion }}">
         @if (session('status'))
             <p class="mb-6 rounded-2xl border border-green-200 bg-green-50 px-5 py-4 font-semibold text-success" role="status">{{ session('status') }}</p>
         @endif
