@@ -10,7 +10,7 @@
         </div>
 
         <x-ui.panel class="mt-8 p-5 sm:p-6">
-            <form method="GET" action="{{ route('educator.analytics.index') }}" class="grid gap-4 lg:grid-cols-[minmax(14rem,1fr)_12rem_12rem_auto] lg:items-end">
+            <form method="GET" action="{{ route('educator.analytics.index') }}" class="grid gap-4 xl:grid-cols-[minmax(14rem,1fr)_12rem_12rem_auto] xl:items-end">
                 <div class="flex flex-col gap-2">
                     <label for="quiz_id" class="text-sm font-bold">Assessment</label>
                     <select id="quiz_id" name="quiz_id" class="min-h-12 rounded-xl border border-line bg-white px-4 py-3">
@@ -23,7 +23,11 @@
                 </div>
                 <x-ui.input label="From" name="from" type="date" :value="$from" />
                 <x-ui.input label="To" name="to" type="date" :value="$to" />
-                <div class="flex gap-2"><x-ui.button type="submit">Apply filters</x-ui.button><x-ui.button href="{{ route('educator.analytics.index') }}" variant="secondary">Reset</x-ui.button></div>
+                <div class="flex flex-wrap gap-2">
+                    <x-ui.button type="submit">Apply filters</x-ui.button>
+                    <x-ui.button href="{{ route('educator.analytics.export', array_filter(['quiz_id' => $selectedQuizId, 'from' => $from, 'to' => $to])) }}" variant="secondary">Export CSV</x-ui.button>
+                    <x-ui.button href="{{ route('educator.analytics.index') }}" variant="secondary">Reset</x-ui.button>
+                </div>
             </form>
         </x-ui.panel>
 

@@ -7,8 +7,10 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducatorAnalyticsController;
+use App\Http\Controllers\EducatorAnalyticsExportController;
 use App\Http\Controllers\EducatorLiveSessionController;
 use App\Http\Controllers\EducatorQuizResultController;
 use App\Http\Controllers\LearnerAttemptHistoryController;
@@ -32,6 +34,9 @@ use App\Http\Controllers\SecurityActivityController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'landing')->name('landing');
+Route::get('/certificates/{verificationCode}', CertificateController::class)
+    ->middleware('throttle:60,1')
+    ->name('certificates.show');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
@@ -76,6 +81,8 @@ Route::middleware('auth')->group(function (): void {
                 ->group(function (): void {
                     Route::view('/', 'educator.dashboard')->name('dashboard');
                     Route::get('analytics', EducatorAnalyticsController::class)->name('analytics.index');
+                    Route::get('analytics/export', EducatorAnalyticsExportController::class)
+                        ->name('analytics.export');
                     Route::resource('quizzes', QuizController::class);
                     Route::get('quizzes/{quiz}/results', [EducatorQuizResultController::class, 'index'])
                         ->name('quizzes.results.index');

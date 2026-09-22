@@ -65,6 +65,7 @@ class QuizController extends Controller
                 'shuffle_questions',
                 'shuffle_answers',
                 'review_policy',
+                'certificates_enabled',
             ]),
             'status' => QuizStatus::Draft,
         ]);
@@ -109,6 +110,7 @@ class QuizController extends Controller
             'shuffle_questions',
             'shuffle_answers',
             'review_policy',
+            'certificates_enabled',
         ]));
 
         return redirect()

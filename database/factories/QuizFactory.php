@@ -31,6 +31,7 @@ class QuizFactory extends Factory
             'shuffle_questions' => false,
             'shuffle_answers' => false,
             'review_policy' => QuizReviewPolicy::Immediately,
+            'certificates_enabled' => false,
             'opens_at' => null,
             'closes_at' => null,
             'published_at' => null,

@@ -52,7 +52,7 @@
     <x-ui.panel class="p-6 sm:p-8">
         <p class="text-xs font-black uppercase tracking-[0.16em] text-muted">Delivery behavior</p>
         <h2 class="mt-2 text-2xl font-black">Choose how each attempt feels</h2>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-line p-4 transition hover:border-brand-200 hover:bg-brand-50/60">
                 <input type="checkbox" name="shuffle_questions" value="1" class="mt-1 size-5 rounded border-line text-brand-600 focus:ring-brand-500" @checked(old('shuffle_questions', $quiz->shuffle_questions))>
                 <span><span class="block font-bold">Shuffle questions</span><span class="mt-1 block text-sm leading-6 text-muted">Present the questions in a different order for each attempt.</span></span>
@@ -60,6 +60,10 @@
             <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-line p-4 transition hover:border-brand-200 hover:bg-brand-50/60">
                 <input type="checkbox" name="shuffle_answers" value="1" class="mt-1 size-5 rounded border-line text-brand-600 focus:ring-brand-500" @checked(old('shuffle_answers', $quiz->shuffle_answers))>
                 <span><span class="block font-bold">Shuffle answer choices</span><span class="mt-1 block text-sm leading-6 text-muted">Reduce position bias while keeping each answer attached to its question.</span></span>
+            </label>
+            <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-line p-4 transition hover:border-brand-200 hover:bg-brand-50/60">
+                <input type="checkbox" name="certificates_enabled" value="1" class="mt-1 size-5 rounded border-line text-brand-600 focus:ring-brand-500" @checked(old('certificates_enabled', $quiz->certificates_enabled))>
+                <span><span class="block font-bold">Completion certificates</span><span class="mt-1 block text-sm leading-6 text-muted">Issue a verifiable certificate automatically when a learner passes.</span></span>
             </label>
         </div>
     </x-ui.panel>

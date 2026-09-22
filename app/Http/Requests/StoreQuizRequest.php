@@ -34,6 +34,7 @@ class StoreQuizRequest extends FormRequest
             'shuffle_questions' => ['required', 'boolean'],
             'shuffle_answers' => ['required', 'boolean'],
             'review_policy' => ['required', Rule::enum(QuizReviewPolicy::class)],
+            'certificates_enabled' => ['required', 'boolean'],
         ];
     }
 
@@ -46,6 +47,7 @@ class StoreQuizRequest extends FormRequest
                 : null,
             'shuffle_questions' => $this->boolean('shuffle_questions'),
             'shuffle_answers' => $this->boolean('shuffle_answers'),
+            'certificates_enabled' => $this->boolean('certificates_enabled'),
         ]);
     }
 }
