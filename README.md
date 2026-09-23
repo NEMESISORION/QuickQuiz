@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Rounds 1 through 7A are merged. The app supports educator authoring, learner attempts and scoring, live rooms, results, analytics, certificates, and notifications. Round 7B is completing quiz lifecycle and live-session workflows. Production email, PostgreSQL verification, browser checks, and deployment remain before release. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Rounds 1 through 7B are merged. The app supports educator authoring, learner attempts and scoring, live rooms, results, analytics, certificates, and notifications. Round 7C is hardening account, email, and database workflows. Production email delivery, browser checks, and deployment remain before release. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -24,11 +24,13 @@ composer run setup
 composer run dev
 ```
 
-The setup command copies `.env.example` when needed, generates the application key, creates the local SQLite database, runs migrations, installs the exact frontend lockfile, and builds production assets.
+The setup command copies `.env.example` when needed, generates an application key only if one is missing, creates the local SQLite database, runs migrations, installs the exact frontend lockfile, and builds production assets. Never rotate `APP_KEY` on an existing installation: doing so invalidates encrypted sessions and stored encrypted data.
 
 Open `http://127.0.0.1:8000`. The development command starts the web server, queue worker, and Vite. The application health check is available at `/up`.
 
 Local email uses the `log` mailer by default, so verification and password-reset links are written to `storage/logs/laravel.log`. The verified demo accounts below are the simplest way to try both workspaces before SMTP is configured.
+
+For real email delivery, set `MAIL_MAILER=smtp`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, and `APP_URL` in your local `.env` or the hosting platform's secret settings. The sender address must belong to a domain verified with your mail provider. Set `MAIL_SCHEME=smtps` for implicit TLS, or use `smtp` for STARTTLS when your provider specifies it. Run a queue worker alongside the web app for queued work, and test registration, resend verification, and password reset with an inbox you control. Never commit provider credentials or use the `log` mailer in production.
 
 ### Local demo accounts
 

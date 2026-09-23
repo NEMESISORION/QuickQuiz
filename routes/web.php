@@ -23,6 +23,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationReadController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilePasswordController;
 use App\Http\Controllers\ProfilePreferenceController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionPositionController;
@@ -157,6 +158,9 @@ Route::middleware('auth')->group(function (): void {
 
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::put('/profile/password', ProfilePasswordController::class)
+                ->middleware('throttle:6,1')
+                ->name('profile.password.update');
             Route::patch('/profile/preferences', [ProfilePreferenceController::class, 'update'])
                 ->name('profile.preferences.update');
             Route::get('/profile/security', SecurityActivityController::class)

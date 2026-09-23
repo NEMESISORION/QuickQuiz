@@ -25,6 +25,16 @@ class PasswordResetTest extends TestCase
             ->assertSeeText('Find your way back');
     }
 
+    public function test_log_mailer_explains_where_local_reset_links_go(): void
+    {
+        config()->set('mail.default', 'log');
+        $this->withoutVite();
+
+        $this->get(route('password.request'))
+            ->assertSee('storage/logs/laravel.log')
+            ->assertSeeText('not your inbox.');
+    }
+
     public function test_existing_user_receives_a_password_reset_notification(): void
     {
         Notification::fake();

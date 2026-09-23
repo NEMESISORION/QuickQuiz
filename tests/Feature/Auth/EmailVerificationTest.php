@@ -42,6 +42,18 @@ class EmailVerificationTest extends TestCase
             ->assertSeeText('Check your inbox');
     }
 
+    public function test_log_mailer_explains_where_the_local_verification_link_goes(): void
+    {
+        config()->set('mail.default', 'log');
+        $user = User::factory()->unverified()->create();
+        $this->withoutVite();
+
+        $this->actingAs($user)
+            ->get(route('verification.notice'))
+            ->assertSee('storage/logs/laravel.log')
+            ->assertSeeText('it will not arrive in your inbox until SMTP is configured.');
+    }
+
     public function test_unverified_user_is_redirected_from_workspace_to_verification_prompt(): void
     {
         $user = User::factory()->unverified()->learner()->create();
