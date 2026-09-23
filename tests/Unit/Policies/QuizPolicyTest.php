@@ -40,6 +40,8 @@ class QuizPolicyTest extends TestCase
         $this->assertTrue($policy->delete($educator, $quiz));
         $this->assertTrue($policy->publish($educator, $quiz));
         $this->assertTrue($policy->archive($educator, $quiz));
+        $this->assertTrue($policy->duplicate($educator, $quiz));
+        $this->assertFalse($policy->close($educator, $quiz));
     }
 
     public function test_other_educator_cannot_manage_quiz(): void
@@ -53,6 +55,8 @@ class QuizPolicyTest extends TestCase
         $this->assertFalse($policy->delete($educator, $quiz));
         $this->assertFalse($policy->publish($educator, $quiz));
         $this->assertFalse($policy->archive($educator, $quiz));
+        $this->assertFalse($policy->duplicate($educator, $quiz));
+        $this->assertFalse($policy->close($educator, $quiz));
     }
 
     public function test_published_quiz_cannot_be_edited_or_deleted(): void
@@ -66,6 +70,19 @@ class QuizPolicyTest extends TestCase
         $this->assertFalse($policy->delete($educator, $quiz));
         $this->assertFalse($policy->publish($educator, $quiz));
         $this->assertTrue($policy->archive($educator, $quiz));
+        $this->assertTrue($policy->duplicate($educator, $quiz));
+        $this->assertTrue($policy->close($educator, $quiz));
+    }
+
+    public function test_archived_quiz_can_be_duplicated_but_not_closed_or_archived_again(): void
+    {
+        $educator = $this->user(10, UserRole::Educator);
+        $quiz = $this->quiz(10, QuizStatus::Archived);
+        $policy = new QuizPolicy;
+
+        $this->assertTrue($policy->duplicate($educator, $quiz));
+        $this->assertFalse($policy->close($educator, $quiz));
+        $this->assertFalse($policy->archive($educator, $quiz));
     }
 
     public function test_only_owner_can_restore_and_nobody_can_force_delete(): void

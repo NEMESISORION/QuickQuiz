@@ -34,6 +34,7 @@ document.querySelectorAll('[data-question-form]').forEach((form) => {
 document.querySelectorAll('[data-live-session-sync]').forEach((container) => {
     const stateUrl = container.dataset.stateUrl;
     const initialVersion = container.dataset.initialVersion;
+    const syncMessage = container.querySelector('[data-live-sync-message]');
     let polling = false;
 
     if (!stateUrl || !initialVersion) return;
@@ -44,13 +45,23 @@ document.querySelectorAll('[data-live-session-sync]').forEach((container) => {
 
         try {
             const response = await fetch(stateUrl, {
+                method: 'POST',
                 credentials: 'same-origin',
-                headers: { Accept: 'application/json' },
+                headers: {
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                },
             });
-            if (!response.ok) return;
+            if (!response.ok) throw new Error('Live updates are unavailable.');
 
             const payload = await response.json();
+            if (syncMessage instanceof HTMLElement) syncMessage.hidden = true;
             if (payload.version !== initialVersion) window.location.reload();
+        } catch {
+            if (syncMessage instanceof HTMLElement) {
+                syncMessage.textContent = 'Live updates paused. Reconnecting automatically…';
+                syncMessage.hidden = false;
+            }
         } finally {
             polling = false;
         }

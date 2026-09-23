@@ -171,3 +171,40 @@
         animation-iteration-count: 1 !important;
     }
 }
+
+@layer components {
+    .qq-progress {
+        display: block;
+        width: 100%;
+        height: 0.75rem;
+        appearance: none;
+        overflow: hidden;
+        border: 0;
+        border-radius: 9999px;
+        background: var(--color-slate-100);
+        color: var(--color-brand-500);
+    }
+
+    .qq-progress--small {
+        height: 0.5rem;
+    }
+
+    .qq-progress--success {
+        color: var(--color-success);
+    }
+
+    .qq-progress::-webkit-progress-bar {
+        border-radius: 9999px;
+        background: var(--color-slate-100);
+    }
+
+    .qq-progress::-webkit-progress-value {
+        border-radius: 9999px;
+        background: currentColor;
+    }
+
+    .qq-progress::-moz-progress-bar {
+        border-radius: 9999px;
+        background: currentColor;
+    }
+}

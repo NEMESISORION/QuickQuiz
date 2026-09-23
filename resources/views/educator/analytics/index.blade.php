@@ -56,7 +56,7 @@
                         @forelse ($trend as $day)
                             <div class="grid grid-cols-[3.5rem_minmax(0,1fr)_3rem] items-center gap-3">
                                 <p class="text-sm font-bold text-muted">{{ $day['label'] }}</p>
-                                <div class="h-3 overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full bg-brand-500" style="width: {{ $day['average_score'] }}%"></div></div>
+                                <progress class="qq-progress" value="{{ $day['average_score'] }}" max="100" aria-label="Average score on {{ $day['label'] }}">{{ $day['average_score'] }}%</progress>
                                 <p class="text-right text-sm font-black">{{ $day['average_score'] }}%</p>
                             </div>
                         @empty
@@ -82,7 +82,7 @@
                                 @foreach ($question['options'] as $option)
                                     <div>
                                         <div class="flex items-center justify-between gap-3 text-sm"><p class="truncate font-semibold">{{ $option['content'] }} @if ($option['is_correct'])<span class="text-success">· correct</span>@endif</p><p class="shrink-0 font-black">{{ $option['selected'] }} · {{ $option['percentage'] }}%</p></div>
-                                        <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full {{ $option['is_correct'] ? 'bg-success' : 'bg-brand-500' }}" style="width: {{ $option['percentage'] }}%"></div></div>
+                                        <progress class="qq-progress qq-progress--small {{ $option['is_correct'] ? 'qq-progress--success' : '' }} mt-2" value="{{ $option['percentage'] }}" max="100" aria-label="Selection rate for {{ $option['content'] }}">{{ $option['percentage'] }}%</progress>
                                     </div>
                                 @endforeach
                             </div>

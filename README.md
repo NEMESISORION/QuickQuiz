@@ -4,13 +4,13 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Rounds 1 through 3 are complete. QuickQuiz now has secure identity workflows and a complete educator authoring experience: quiz settings, ordered multiple-choice and true-or-false questions, learner preview, scheduling, structural publication checks, and immutable published assessments. Round 4 begins the learner assessment experience. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Rounds 1 through 7A are merged. The app supports educator authoring, learner attempts and scoring, live rooms, results, analytics, certificates, and notifications. Round 7B is completing quiz lifecycle and live-session workflows. Production email, PostgreSQL verification, browser checks, and deployment remain before release. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
 - PHP 8.5 and Laravel 13
-- Blade, Tailwind CSS 4, Alpine.js, and Vite
-- PostgreSQL in production and SQLite for local development/tests
+- Blade, Tailwind CSS 4, vanilla JavaScript, and Vite
+- SQLite for local development/tests; PostgreSQL planned for production
 - PHPUnit, Larastan/PHPStan, and Laravel Pint
 - GitHub Actions for backend and frontend verification
 
@@ -21,12 +21,14 @@ Prerequisites: PHP 8.5 with the standard Laravel extensions, Composer 2, Node.js
 ```powershell
 composer install --no-interaction --prefer-dist
 composer run setup
-php artisan serve
+composer run dev
 ```
 
 The setup command copies `.env.example` when needed, generates the application key, creates the local SQLite database, runs migrations, installs the exact frontend lockfile, and builds production assets.
 
-Open `http://127.0.0.1:8000`. The application health check is available at `/up`.
+Open `http://127.0.0.1:8000`. The development command starts the web server, queue worker, and Vite. The application health check is available at `/up`.
+
+Local email uses the `log` mailer by default, so verification and password-reset links are written to `storage/logs/laravel.log`. The verified demo accounts below are the simplest way to try both workspaces before SMTP is configured.
 
 ### Local demo accounts
 

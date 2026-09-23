@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Domain\LiveSessions\CreateLiveSession;
 use App\Domain\LiveSessions\LiveSessionState;
+use App\Enums\LiveSessionStatus;
 use App\Models\LiveSession;
 use App\Models\LiveSessionResponse;
 use App\Models\Quiz;
@@ -31,7 +32,7 @@ class EducatorLiveSessionController extends Controller
     public function show(LiveSession $liveSession, LiveSessionState $liveSessionState): View
     {
         Gate::authorize('viewHostLobby', $liveSession);
-        $liveSession->load(['quiz.questions', 'currentQuestion.answerOptions']);
+        $liveSession->load(['quiz.questions.answerOptions', 'currentQuestion.answerOptions']);
         $participants = $liveSession->participants()
             ->with('learner')
             ->withSum('responses', 'points_awarded')
@@ -46,6 +47,14 @@ class EducatorLiveSessionController extends Controller
                 ->selectRaw('answer_option_id, count(*) as response_count')
                 ->groupBy('answer_option_id')
                 ->pluck('response_count', 'answer_option_id');
+        $reportDistribution = $liveSession->status === LiveSessionStatus::Completed
+            ? LiveSessionResponse::query()
+                ->whereHas('participant', fn ($query) => $query->whereBelongsTo($liveSession))
+                ->selectRaw('question_id, answer_option_id, count(*) as response_count')
+                ->groupBy('question_id', 'answer_option_id')
+                ->get()
+                ->groupBy('question_id')
+            : collect();
         $questionNumber = $liveSession->current_question_id === null
             ? null
             : $liveSession->quiz->questions->search(
@@ -56,6 +65,7 @@ class EducatorLiveSessionController extends Controller
             'liveSession' => $liveSession,
             'participants' => $participants,
             'distribution' => $distribution,
+            'reportDistribution' => $reportDistribution,
             'questionNumber' => $questionNumber === false || $questionNumber === null ? null : $questionNumber + 1,
             'maxScore' => (int) $liveSession->quiz->questions->sum('points'),
             'syncVersion' => $liveSessionState->version($liveSession),
