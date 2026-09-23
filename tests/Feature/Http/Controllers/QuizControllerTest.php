@@ -193,7 +193,7 @@ class QuizControllerTest extends TestCase
         $this->actingAs($educator)
             ->delete(route('educator.quizzes.destroy', $draft))
             ->assertRedirect(route('educator.quizzes.index'))
-            ->assertSessionHas('status', 'Quiz moved to the archive.');
+            ->assertSessionHas('status', 'Draft deleted.');
         $this->assertSoftDeleted($draft);
 
         $this->actingAs($educator)

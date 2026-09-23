@@ -51,9 +51,20 @@ class QuizPolicy
             && in_array($quiz->status, [QuizStatus::Draft, QuizStatus::Scheduled], true);
     }
 
+    public function duplicate(User $user, Quiz $quiz): bool
+    {
+        return $this->owns($user, $quiz);
+    }
+
     public function archive(User $user, Quiz $quiz): bool
     {
         return $this->owns($user, $quiz) && $quiz->status !== QuizStatus::Archived;
+    }
+
+    public function close(User $user, Quiz $quiz): bool
+    {
+        return $this->owns($user, $quiz)
+            && in_array($quiz->status, [QuizStatus::Scheduled, QuizStatus::Published], true);
     }
 
     public function discover(User $user, Quiz $quiz): bool

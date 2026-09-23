@@ -6,6 +6,7 @@
         @error('answer_option_id')
             <p class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 font-semibold text-danger" role="alert">{{ $message }}</p>
         @enderror
+        <p data-live-sync-message hidden class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 font-semibold text-warning" role="status" aria-live="polite"></p>
 
         <div class="text-center">
             <x-ui.badge tone="accent">{{ $liveSession->status->label() }}</x-ui.badge>

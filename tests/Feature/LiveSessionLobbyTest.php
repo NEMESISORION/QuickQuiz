@@ -51,10 +51,40 @@ class LiveSessionLobbyTest extends TestCase
         $this->actingAs($educator)
             ->post(route('educator.quizzes.live-sessions.store', $quiz))
             ->assertSessionHasErrors([
-                'quiz' => 'Only a published quiz can be used for a live session.',
+                'quiz' => 'Only a currently open quiz can be used for a live session.',
             ]);
 
         $this->assertSame(0, LiveSession::query()->count());
+    }
+
+    public function test_scheduled_quiz_can_open_a_live_lobby_after_its_start_time(): void
+    {
+        $educator = User::factory()->educator()->create();
+        $quiz = Quiz::factory()->scheduled()->for($educator, 'educator')->create([
+            'opens_at' => now()->subMinute(),
+            'closes_at' => now()->addHour(),
+        ]);
+
+        $response = $this->actingAs($educator)
+            ->post(route('educator.quizzes.live-sessions.store', $quiz));
+
+        $liveSession = LiveSession::query()->sole();
+        $response->assertRedirect(route('educator.live-sessions.show', $liveSession));
+        $this->actingAs($educator)
+            ->get(route('educator.quizzes.show', $quiz))
+            ->assertSee('Open live lobby');
+    }
+
+    public function test_scheduled_quiz_cannot_open_a_live_lobby_before_its_start_time(): void
+    {
+        $educator = User::factory()->educator()->create();
+        $quiz = Quiz::factory()->scheduled()->for($educator, 'educator')->create();
+
+        $this->actingAs($educator)
+            ->post(route('educator.quizzes.live-sessions.store', $quiz))
+            ->assertSessionHasErrors('quiz');
+
+        $this->assertDatabaseCount('live_sessions', 0);
     }
 
     public function test_other_educator_cannot_open_or_view_an_owned_quiz_lobby(): void
@@ -111,6 +141,73 @@ class LiveSessionLobbyTest extends TestCase
         $this->assertSame(1, LiveSessionParticipant::query()->count());
         $this->assertTrue($joinedAt->equalTo($participant->joined_at));
         $this->assertTrue($participant->last_seen_at->greaterThan($joinedAt));
+    }
+
+    public function test_learner_heartbeat_updates_presence_without_reloading_the_page(): void
+    {
+        $educator = User::factory()->educator()->create();
+        $learner = User::factory()->learner()->create();
+        $quiz = Quiz::factory()->published()->for($educator, 'educator')->create();
+        $liveSession = LiveSession::factory()->for($quiz)->for($educator, 'host')->create();
+        $participant = LiveSessionParticipant::factory()->for($liveSession)->for($learner, 'learner')->create([
+            'last_seen_at' => now()->subSeconds(30),
+        ]);
+
+        $this->actingAs($educator)
+            ->get(route('educator.live-sessions.show', $liveSession))
+            ->assertSee('Away');
+        $before = $this->actingAs($learner)
+            ->getJson(route('live-sessions.state', $liveSession))
+            ->json('version');
+        $this->assertTrue($participant->fresh()->last_seen_at->lessThan(now()->subSeconds(15)));
+
+        $response = $this->actingAs($learner)
+            ->postJson(route('live-sessions.state', $liveSession));
+
+        $response->assertOk();
+        $this->assertNotSame($before, $response->json('version'));
+        $this->assertTrue($participant->fresh()->last_seen_at->greaterThan(now()->subSeconds(5)));
+        $this->actingAs($educator)
+            ->get(route('educator.live-sessions.show', $liveSession))
+            ->assertSee('Online');
+    }
+
+    public function test_unjoined_learner_cannot_send_a_live_heartbeat(): void
+    {
+        $learner = User::factory()->learner()->create();
+        $liveSession = LiveSession::factory()->create();
+
+        $this->actingAs($learner)
+            ->postJson(route('live-sessions.state', $liveSession))
+            ->assertForbidden();
+
+        $this->assertDatabaseCount('live_session_participants', 0);
+    }
+
+    public function test_live_state_changes_when_online_learners_swap_without_changing_the_online_count(): void
+    {
+        $educator = User::factory()->educator()->create();
+        $quiz = Quiz::factory()->published()->for($educator, 'educator')->create();
+        $liveSession = LiveSession::factory()->for($quiz)->for($educator, 'host')->create();
+        $firstParticipant = LiveSessionParticipant::factory()->for($liveSession)->create([
+            'last_seen_at' => now(),
+        ]);
+        $secondParticipant = LiveSessionParticipant::factory()->for($liveSession)->create([
+            'last_seen_at' => now()->subSeconds(30),
+        ]);
+
+        $before = $this->actingAs($educator)
+            ->getJson(route('live-sessions.state', $liveSession))
+            ->json('version');
+
+        $firstParticipant->update(['last_seen_at' => now()->subSeconds(30)]);
+        $secondParticipant->update(['last_seen_at' => now()]);
+
+        $after = $this->actingAs($educator)
+            ->getJson(route('live-sessions.state', $liveSession))
+            ->json('version');
+
+        $this->assertNotSame($before, $after);
     }
 
     public function test_invalid_or_closed_code_does_not_create_a_participant(): void

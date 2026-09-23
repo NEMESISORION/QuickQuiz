@@ -26,11 +26,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePreferenceController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionPositionController;
+use App\Http\Controllers\QuizArchiveController;
 use App\Http\Controllers\QuizAttemptAnswerController;
 use App\Http\Controllers\QuizAttemptController;
 use App\Http\Controllers\QuizAttemptResultController;
 use App\Http\Controllers\QuizAttemptSubmissionController;
+use App\Http\Controllers\QuizCloseController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizDuplicateController;
 use App\Http\Controllers\QuizPreviewController;
 use App\Http\Controllers\QuizPublicationController;
 use App\Http\Controllers\SecurityActivityController;
@@ -87,6 +90,12 @@ Route::middleware('auth')->group(function (): void {
                     Route::get('analytics/export', EducatorAnalyticsExportController::class)
                         ->name('analytics.export');
                     Route::resource('quizzes', QuizController::class);
+                    Route::post('quizzes/{quiz}/duplicate', QuizDuplicateController::class)
+                        ->name('quizzes.duplicate');
+                    Route::post('quizzes/{quiz}/archive', QuizArchiveController::class)
+                        ->name('quizzes.archive');
+                    Route::post('quizzes/{quiz}/close', QuizCloseController::class)
+                        ->name('quizzes.close');
                     Route::get('quizzes/{quiz}/results', [EducatorQuizResultController::class, 'index'])
                         ->name('quizzes.results.index');
                     Route::scopeBindings()->group(function (): void {
@@ -142,7 +151,7 @@ Route::middleware('auth')->group(function (): void {
                         ->name('attempts.answers.update');
                 });
 
-            Route::get('/live-sessions/{liveSession}/state', LiveSessionStateController::class)
+            Route::match(['GET', 'POST'], '/live-sessions/{liveSession}/state', LiveSessionStateController::class)
                 ->middleware('throttle:120,1')
                 ->name('live-sessions.state');
 

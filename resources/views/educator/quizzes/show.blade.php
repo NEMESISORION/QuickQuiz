@@ -35,6 +35,10 @@
                 @endcan
                 <x-ui.button href="{{ route('educator.quizzes.preview', $quiz) }}" variant="secondary">Learner preview</x-ui.button>
                 <x-ui.button href="{{ route('educator.quizzes.results.index', $quiz) }}" variant="secondary">View results</x-ui.button>
+                <form method="POST" action="{{ route('educator.quizzes.duplicate', $quiz) }}">
+                    @csrf
+                    <x-ui.button type="submit" variant="secondary">Duplicate as draft</x-ui.button>
+                </form>
             </div>
 
             <section class="mt-10" aria-labelledby="questions-title">
@@ -82,6 +86,25 @@
                 @endforelse
             </section>
 
+            @if ($recentLiveSessions->isNotEmpty())
+                <section class="mt-10" aria-labelledby="live-sessions-title">
+                    <div class="border-b border-line pb-4">
+                        <p class="text-sm font-black uppercase tracking-[0.16em] text-brand-700">Live delivery history</p>
+                        <h2 id="live-sessions-title" class="mt-2 text-2xl font-black">Recent sessions</h2>
+                    </div>
+                    <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+                        @foreach ($recentLiveSessions as $liveSession)
+                            <li>
+                                <a href="{{ route('educator.live-sessions.show', $liveSession) }}" class="flex min-h-20 items-center justify-between gap-4 rounded-2xl border border-line bg-white p-4 transition hover:border-brand-300">
+                                    <span class="min-w-0"><span class="block font-black">{{ $liveSession->status->label() }} · {{ $liveSession->code }}</span><span class="mt-1 block text-sm text-muted">{{ $liveSession->participants_count }} {{ Str::plural('learner', $liveSession->participants_count) }} · {{ $liveSession->created_at->format('M j, Y') }}</span></span>
+                                    <span aria-hidden="true" class="font-black text-brand-700">→</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </section>
+            @endif
+
             @can('publish', $quiz)
                 <x-ui.panel class="mt-10 p-6 sm:p-8">
                     <p class="text-xs font-black uppercase tracking-[0.16em] text-accent-700">Final delivery step</p>
@@ -107,7 +130,7 @@
         </div>
 
         <aside class="lg:sticky lg:top-6">
-            @if ($quiz->status === \App\Enums\QuizStatus::Published)
+            @if ($canOpenLiveSession)
                 <x-ui.panel class="mb-5 p-6">
                     <p class="text-xs font-black uppercase tracking-[0.16em] text-accent-700">Live delivery</p>
                     <h2 class="mt-2 text-xl font-black">Bring learners together</h2>
@@ -129,6 +152,37 @@
                     <div class="flex items-start justify-between gap-4"><dt class="text-muted">Answer order</dt><dd class="text-right font-bold">{{ $quiz->shuffle_answers ? 'Shuffled' : 'Fixed' }}</dd></div>
                 </dl>
             </x-ui.panel>
+            @can('archive', $quiz)
+                <x-ui.panel class="mt-5 p-6">
+                    <h2 class="font-black">Archive this quiz</h2>
+                    <p class="mt-2 text-sm leading-6 text-muted">Remove it from learner discovery while keeping existing attempts and results.</p>
+                    <form method="POST" action="{{ route('educator.quizzes.archive', $quiz) }}" class="mt-4">
+                        @csrf
+                        <x-ui.button type="submit" variant="secondary" class="w-full">Archive quiz</x-ui.button>
+                    </form>
+                </x-ui.panel>
+            @endcan
+            @can('close', $quiz)
+                <x-ui.panel class="mt-5 p-6">
+                    <h2 class="font-black">Close to new attempts</h2>
+                    <p class="mt-2 text-sm leading-6 text-muted">Learners already working can finish. No new attempts can start.</p>
+                    <form method="POST" action="{{ route('educator.quizzes.close', $quiz) }}" class="mt-4">
+                        @csrf
+                        <x-ui.button type="submit" variant="secondary" class="w-full">Close quiz</x-ui.button>
+                    </form>
+                </x-ui.panel>
+            @endcan
+            @can('delete', $quiz)
+                <details class="mt-5 rounded-2xl border border-red-200 bg-red-50 p-6">
+                    <summary class="cursor-pointer font-black text-danger">Delete this draft</summary>
+                    <p class="mt-3 text-sm leading-6 text-muted">This removes the draft from your library.</p>
+                    <form method="POST" action="{{ route('educator.quizzes.destroy', $quiz) }}" class="mt-4">
+                        @csrf
+                        @method('DELETE')
+                        <x-ui.button type="submit" variant="secondary">Confirm draft deletion</x-ui.button>
+                    </form>
+                </details>
+            @endcan
         </aside>
     </section>
 </x-layouts.workspace>

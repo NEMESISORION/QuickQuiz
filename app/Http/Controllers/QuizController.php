@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Attempts\QuizAvailability;
 use App\Enums\QuizReviewPolicy;
 use App\Enums\QuizStatus;
 use App\Http\Requests\StoreQuizRequest;
@@ -75,7 +76,7 @@ class QuizController extends Controller
             ->with('status', 'Quiz draft created.');
     }
 
-    public function show(Quiz $quiz): View
+    public function show(Quiz $quiz, QuizAvailability $availability): View
     {
         Gate::authorize('view', $quiz);
 
@@ -86,7 +87,17 @@ class QuizController extends Controller
             fn (Question $question): Question => $question->setRelation('quiz', $quiz),
         );
 
-        return view('educator.quizzes.show', ['quiz' => $quiz]);
+        $recentLiveSessions = $quiz->liveSessions()
+            ->withCount('participants')
+            ->latest('id')
+            ->limit(10)
+            ->get();
+
+        return view('educator.quizzes.show', [
+            'quiz' => $quiz,
+            'recentLiveSessions' => $recentLiveSessions,
+            'canOpenLiveSession' => $availability->isOpen($quiz),
+        ]);
     }
 
     public function edit(Quiz $quiz): View
@@ -126,6 +137,6 @@ class QuizController extends Controller
 
         return redirect()
             ->route('educator.quizzes.index')
-            ->with('status', 'Quiz moved to the archive.');
+            ->with('status', 'Draft deleted.');
     }
 }

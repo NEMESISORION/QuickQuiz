@@ -44,7 +44,9 @@ class EducatorAnalyticsTest extends TestCase
             ->assertSeeText('Which cell structure produces energy?')
             ->assertSeeText('50%')
             ->assertSeeText('Mitochondrion · correct')
-            ->assertSeeText('Nucleus');
+            ->assertSeeText('Nucleus')
+            ->assertSee('<progress', false)
+            ->assertDontSee('style=', false);
     }
 
     public function test_quiz_and_date_filters_exclude_nonmatching_attempts(): void
