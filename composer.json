@@ -36,7 +36,7 @@
     "scripts": {
         "setup": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "@php artisan key:generate --ansi --no-interaction",
+            "@php artisan app:ensure-application-key --ansi --no-interaction",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --force --no-interaction",
             "npm ci",

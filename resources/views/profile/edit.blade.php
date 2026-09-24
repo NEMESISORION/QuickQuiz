@@ -21,6 +21,23 @@
             </form>
         </section>
 
+        <section aria-labelledby="password-heading">
+            <p class="text-sm font-black uppercase tracking-[0.18em] text-accent-700">Account security</p>
+            <h2 id="password-heading" class="mt-3 text-3xl font-black tracking-tight">Change password</h2>
+            <p class="mt-3 leading-7 text-muted">Use your current password to protect your account. Other sessions will need to sign in again.</p>
+
+            <form method="POST" action="{{ route('profile.password.update') }}" class="mt-6 flex flex-col gap-5">
+                @csrf
+                @method('PUT')
+
+                <x-ui.input label="Current password" name="current_password" type="password" autocomplete="current-password" required />
+                <x-ui.input label="New password" name="password" type="password" autocomplete="new-password" required />
+                <x-ui.input label="Confirm new password" name="password_confirmation" type="password" autocomplete="new-password" required />
+
+                <div><x-ui.button type="submit">Change password</x-ui.button></div>
+            </form>
+        </section>
+
         <section aria-labelledby="preferences-heading">
             <p class="text-sm font-black uppercase tracking-[0.18em] text-accent-700">Experience settings</p>
             <h2 id="preferences-heading" class="mt-3 text-3xl font-black tracking-tight">Preferences</h2>

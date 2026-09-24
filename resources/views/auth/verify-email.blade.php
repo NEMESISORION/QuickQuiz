@@ -10,6 +10,12 @@
         </div>
     @endif
 
+    @if (config('mail.default') === 'log')
+        <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-warning" role="note">
+            Email delivery is in local log mode. Open <code>storage/logs/laravel.log</code> to find your verification link; it will not arrive in your inbox until SMTP is configured.
+        </div>
+    @endif
+
     <div class="rounded-2xl border border-line bg-white p-5 shadow-sm">
         <p class="text-sm leading-6 text-muted">The link is time-limited. If it has expired or did not arrive, request another one below.</p>
 

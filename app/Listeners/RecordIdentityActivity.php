@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Domain\Identity\IdentityAuditLogger;
 use App\Enums\IdentityAuditEventType;
+use App\Events\Identity\PasswordChanged;
 use App\Events\Identity\ProfileUpdated;
 use App\Events\Identity\RoleSelected;
 use App\Models\User;
@@ -50,6 +51,11 @@ class RecordIdentityActivity
         $this->logger->record(IdentityAuditEventType::PasswordReset, $this->user($event->user));
     }
 
+    public function handlePasswordChanged(PasswordChanged $event): void
+    {
+        $this->logger->record(IdentityAuditEventType::PasswordChanged, $event->user);
+    }
+
     public function handleVerified(Verified $event): void
     {
         $this->logger->record(IdentityAuditEventType::EmailVerified, $this->user($event->user));
@@ -84,6 +90,7 @@ class RecordIdentityActivity
             Failed::class => 'handleFailed',
             Logout::class => 'handleLogout',
             PasswordReset::class => 'handlePasswordReset',
+            PasswordChanged::class => 'handlePasswordChanged',
             Verified::class => 'handleVerified',
             RoleSelected::class => 'handleRoleSelected',
             ProfileUpdated::class => 'handleProfileUpdated',

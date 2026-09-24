@@ -74,6 +74,56 @@ jobs:
       - name: Audit PHP dependencies
         run: composer audit --locked
 
+  postgresql:
+    name: PostgreSQL integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: quickquiz_test
+          POSTGRES_USER: quickquiz
+          POSTGRES_PASSWORD: quickquiz_ci_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U quickquiz -d quickquiz_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: quickquiz_test
+      DB_USERNAME: quickquiz
+      DB_PASSWORD: quickquiz_ci_only
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: curl, dom, fileinfo, intl, mbstring, openssl, pdo_pgsql, pgsql
+          coverage: none
+          tools: composer:v2
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare PostgreSQL application
+        run: |
+          cp .env.example .env
+          php artisan app:ensure-application-key --no-interaction
+          php artisan migrate --force --no-interaction
+
+      - name: Verify PostgreSQL behavior
+        run: php artisan test --compact
+
   frontend:
     name: Frontend quality
     runs-on: ubuntu-latest
