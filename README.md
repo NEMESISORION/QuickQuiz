@@ -4,7 +4,7 @@ QuickQuiz v2 is a modern assessment platform for educators and learners. It is b
 
 ## Current status
 
-Rounds 1 through 7B are merged. The app supports educator authoring, learner attempts and scoring, live rooms, results, analytics, certificates, and notifications. Round 7C is hardening account, email, and database workflows. Production email delivery, browser checks, and deployment remain before release. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
+Rounds 1 through 7D are merged. The app supports educator authoring, learner attempts and scoring, live rooms, results, analytics, certificates, and notifications. The next milestone is public hosting with persistent PostgreSQL and real email delivery. The original procedural PHP application remains recoverable from the `legacy-v1.0` Git tag.
 
 ## Technology
 
@@ -42,6 +42,25 @@ Running `php artisan db:seed` in the local environment creates two idempotent, v
 | Learner | `learner@demo.quickquiz.test` | `DemoQuickQuiz1!` |
 
 For production, set `SESSION_SECURE_COOKIE=true`, keep `SESSION_ENCRYPT=true`, serve only over HTTPS, and never deploy these demo credentials.
+
+## Public deployment preparation
+
+The repository includes a PHP 8.5 Docker image for a Render web service. It serves Laravel from `public/`, builds frontend assets during image creation, runs migrations on startup (Render Free does not include a pre-deploy command), and listens on Render's `PORT`. Use a persistent external PostgreSQL database such as Neon; neither SQLite on Render's filesystem nor Render Free PostgreSQL is suitable for durable portfolio data.
+
+Set these values in the host's secret/environment settings, not in Git:
+
+| Setting | Production value |
+| --- | --- |
+| `APP_ENV`, `APP_DEBUG`, `APP_URL` | `production`, `false`, and the final HTTPS site URL |
+| `APP_KEY` | One generated Laravel key; retain the same key across redeploys |
+| `DB_CONNECTION`, `DB_URL` | `pgsql` and the provider's PostgreSQL connection URL with TLS required |
+| `SESSION_DRIVER`, `SESSION_SECURE_COOKIE`, `SESSION_ENCRYPT` | `database`, `true`, `true` |
+| `CACHE_STORE`, `QUEUE_CONNECTION` | `database`, `sync` (no separate worker on the free web service) |
+| `LOG_CHANNEL`, `LOG_LEVEL` | `stderr`, `warning` |
+| `MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT` | `smtp`, `smtp-relay.brevo.com`, `2525` |
+| `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS` | Brevo SMTP credentials and a sender verified in Brevo |
+
+Do not deploy until the email sender is ready. The start command rejects missing or unsafe production settings. After deployment, test registration, verification, resend, password reset, educator publishing, and learner attempts on the public URL. A green `/up` health check alone does not prove the database or email service works. Keep Render auto-deploys off while testing to avoid unnecessary builds.
 
 ## Verification
 
