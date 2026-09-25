@@ -81,6 +81,26 @@ class EmailVerificationTest extends TestCase
         Event::assertDispatched(Verified::class);
     }
 
+    public function test_valid_signed_link_uses_the_forwarded_https_scheme(): void
+    {
+        $user = User::factory()->unverified()->create();
+        URL::forceScheme('https');
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)],
+        );
+        URL::forceScheme(null);
+
+        $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.1'])
+            ->withHeader('X-Forwarded-Proto', 'https')
+            ->actingAs($user)
+            ->get($verificationUrl)
+            ->assertRedirect(route('dashboard'));
+
+        $this->assertTrue($user->refresh()->hasVerifiedEmail());
+    }
+
     public function test_invalid_signature_does_not_verify_email(): void
     {
         $user = User::factory()->unverified()->create();

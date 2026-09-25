@@ -16,6 +16,17 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(AddSecurityHeaders::class);
         $middleware->authenticateSessions();
+        $middleware->trustProxies(
+            at: '*',
+            headers: Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_PORT,
+        );
+
+        $middleware->trustHosts(
+            at: fn (): array => app()->isProduction()
+                ? ['^'.preg_quote((string) parse_url((string) config('app.url'), PHP_URL_HOST), '/').'$']
+                : ['.*'],
+            subdomains: false,
+        );
 
         $middleware->alias([
             'role.selected' => EnsureRoleSelected::class,
