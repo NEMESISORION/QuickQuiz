@@ -6,6 +6,8 @@ if [ "${APP_ENV:-}" != "production" ]; then
     exit 1
 fi
 
+export APP_URL="${APP_URL:-${RENDER_EXTERNAL_URL:-}}"
+
 if [ -z "${APP_KEY:-}" ] || [ -z "${APP_URL:-}" ] || [ -z "${DB_URL:-}" ] || [ -z "${MAIL_FROM_ADDRESS:-}" ]; then
     echo "Missing APP_KEY, APP_URL, DB_URL, or MAIL_FROM_ADDRESS." >&2
     exit 1

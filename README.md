@@ -51,7 +51,7 @@ Set these values in the host's secret/environment settings, not in Git:
 
 | Setting | Production value |
 | --- | --- |
-| `APP_ENV`, `APP_DEBUG`, `APP_URL` | `production`, `false`, and the final HTTPS site URL |
+| `APP_ENV`, `APP_DEBUG`, `APP_URL` | `production`, `false`, and the final HTTPS site URL. On Render, `APP_URL` may be omitted to use Render's `RENDER_EXTERNAL_URL` automatically. |
 | `APP_KEY` | One generated Laravel key; retain the same key across redeploys |
 | `DB_CONNECTION`, `DB_URL` | `pgsql` and the provider's PostgreSQL connection URL with TLS required |
 | `SESSION_DRIVER`, `SESSION_SECURE_COOKIE`, `SESSION_ENCRYPT` | `database`, `true`, `true` |
