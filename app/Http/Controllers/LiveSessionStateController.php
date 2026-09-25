@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\LiveSessions\ExpireLiveSession;
 use App\Domain\LiveSessions\LiveSessionState;
 use App\Models\LiveSession;
 use App\Models\User;
@@ -11,9 +12,10 @@ use Illuminate\Support\Facades\Gate;
 
 class LiveSessionStateController extends Controller
 {
-    public function __invoke(Request $request, LiveSession $liveSession, LiveSessionState $liveSessionState): JsonResponse
+    public function __invoke(Request $request, LiveSession $liveSession, LiveSessionState $liveSessionState, ExpireLiveSession $expireLiveSession): JsonResponse
     {
         Gate::authorize('viewState', $liveSession);
+        $liveSession = $expireLiveSession->handle($liveSession);
 
         if ($request->isMethod('POST')) {
             $user = $request->user();

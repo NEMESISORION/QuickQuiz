@@ -34,6 +34,20 @@ class LiveSession extends Model
         ];
     }
 
+    public function expiresAt(): ?Carbon
+    {
+        if ($this->started_at === null || $this->quiz->duration_minutes === null) {
+            return null;
+        }
+
+        return $this->started_at->copy()->addMinutes($this->quiz->duration_minutes);
+    }
+
+    public function hasExpired(): bool
+    {
+        return $this->status === LiveSessionStatus::Active && $this->expiresAt()?->lessThanOrEqualTo(now()) === true;
+    }
+
     /** @return BelongsTo<Quiz, $this> */
     public function quiz(): BelongsTo
     {

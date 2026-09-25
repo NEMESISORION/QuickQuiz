@@ -27,6 +27,13 @@
             @endif
         </div>
 
+        @if ($liveSession->status === \App\Enums\LiveSessionStatus::Active)
+            <div class="mt-6 rounded-xl border border-line bg-white px-4 py-3 text-center">
+                <p class="text-xs font-black uppercase tracking-[0.14em] text-muted">Time remaining</p>
+                <p data-live-time data-remaining-seconds="{{ $remainingSeconds }}" class="mt-1 font-mono text-xl font-black text-ink">{{ $remainingSeconds === null ? 'No time limit' : '—' }}</p>
+            </div>
+        @endif
+
         @if ($liveSession->status === \App\Enums\LiveSessionStatus::Waiting)
             <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_20rem]">
                 <x-ui.panel class="p-6 sm:p-8">

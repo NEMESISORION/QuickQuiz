@@ -91,6 +91,67 @@ class LiveSessionGameplayTest extends TestCase
         $this->assertSame($question->points, $liveResponse->points_awarded);
     }
 
+    public function test_host_and_learner_see_the_same_live_quiz_countdown(): void
+    {
+        $this->freezeTime();
+        [$host, $liveSession] = $this->activeSession();
+        $learner = User::factory()->learner()->create();
+        LiveSessionParticipant::factory()->for($liveSession)->for($learner, 'learner')->create();
+        $this->withoutVite();
+
+        $this->actingAs($host)->get(route('educator.live-sessions.show', $liveSession))
+            ->assertSee('Time remaining')
+            ->assertSee('data-remaining-seconds="1200"', false);
+        $this->actingAs($learner)->get(route('learner.live-sessions.show', $liveSession))
+            ->assertSee('Time remaining')
+            ->assertSee('data-remaining-seconds="1200"', false);
+    }
+
+    public function test_expired_live_quiz_rejects_late_answers_and_shows_final_standings(): void
+    {
+        $this->freezeTime();
+        [$host, $liveSession, $question] = $this->activeSession();
+        $learner = User::factory()->learner()->create();
+        LiveSessionParticipant::factory()->for($liveSession)->for($learner, 'learner')->create();
+        $option = AnswerOption::factory()->correct()->for($question)->create();
+        $this->travel(20)->minutes();
+        $this->withoutVite();
+
+        $this->actingAs($learner)->post(route('learner.live-sessions.answer', $liveSession), [
+            'answer_option_id' => $option->getKey(),
+        ])->assertSessionHasErrors(['answer_option_id' => 'Time is up for this live quiz.']);
+        $this->assertSame(0, LiveSessionResponse::query()->count());
+
+        $this->actingAs($host)->get(route('educator.live-sessions.show', $liveSession))
+            ->assertSee('Final standings');
+        $this->assertSame(LiveSessionStatus::Completed, $liveSession->fresh()?->status);
+        $this->assertNotNull($liveSession->fresh()?->ended_at);
+    }
+
+    public function test_live_quiz_with_no_duration_has_no_time_limit(): void
+    {
+        [$host, $liveSession] = $this->activeSession();
+        $liveSession->quiz->update(['duration_minutes' => null]);
+        $this->withoutVite();
+
+        $this->actingAs($host)->get(route('educator.live-sessions.show', $liveSession))
+            ->assertSee('No time limit');
+        $this->assertSame(LiveSessionStatus::Active, $liveSession->fresh()?->status);
+    }
+
+    public function test_state_poll_completes_an_expired_live_quiz(): void
+    {
+        $this->freezeTime();
+        [, $liveSession] = $this->activeSession();
+        $learner = User::factory()->learner()->create();
+        LiveSessionParticipant::factory()->for($liveSession)->for($learner, 'learner')->create();
+        $this->travel(21)->minutes();
+
+        $this->actingAs($learner)->getJson(route('live-sessions.state', $liveSession))
+            ->assertJsonPath('version', 'completed:none:1::0');
+        $this->assertSame(LiveSessionStatus::Completed, $liveSession->fresh()?->status);
+    }
+
     public function test_wrong_answer_awards_zero_points(): void
     {
         [, $liveSession, $question] = $this->activeSession();
