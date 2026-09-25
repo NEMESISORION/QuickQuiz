@@ -19,6 +19,8 @@ RUN npm ci && npm run build
 
 FROM php AS application
 
+RUN setcap -r /usr/local/bin/frankenphp
+
 COPY --from=assets /app/public/build /app/public/build
 
 EXPOSE 10000
