@@ -83,13 +83,6 @@
         --color-amber-200: #92400e;
     }
 
-    html.dark .bg-white,
-    html.dark .bg-white\/95,
-    html.dark .bg-white\/90,
-    html.dark .bg-white\/70 {
-        background-color: var(--color-surface);
-    }
-
     body {
         background: var(--color-canvas);
         color: var(--color-ink);
@@ -148,12 +141,25 @@
         --color-amber-50: #451a03;
         --color-amber-200: #92400e;
     }
+}
 
-    html.system-theme .bg-white,
-    html.system-theme .bg-white\/95,
-    html.system-theme .bg-white\/90,
-    html.system-theme .bg-white\/70 {
+@layer utilities {
+    html.dark .bg-white,
+    html.dark .bg-white\/95,
+    html.dark .bg-white\/90,
+    html.dark .bg-white\/70 {
         background-color: var(--color-surface);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    @layer utilities {
+        html.system-theme .bg-white,
+        html.system-theme .bg-white\/95,
+        html.system-theme .bg-white\/90,
+        html.system-theme .bg-white\/70 {
+            background-color: var(--color-surface);
+        }
     }
 }
 

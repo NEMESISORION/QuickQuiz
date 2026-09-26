@@ -24,6 +24,10 @@ class RecordLiveAnswer
                 throw ValidationException::withMessages(['answer_option_id' => 'There is no active question to answer.']);
             }
 
+            if ($lockedSession->hasExpired()) {
+                throw ValidationException::withMessages(['answer_option_id' => 'Time is up for this live quiz.']);
+            }
+
             $existingResponse = $participant->responses()
                 ->where('question_id', $lockedSession->current_question_id)
                 ->first();

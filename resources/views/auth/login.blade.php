@@ -8,7 +8,7 @@
         @csrf
 
         <x-ui.input label="Email address" name="email" type="email" autocomplete="email" inputmode="email" autofocus required :value="old('email')" />
-        <x-ui.input label="Password" name="password" type="password" autocomplete="current-password" required />
+        <x-ui.input label="Password" name="password" type="password" autocomplete="current-password" required revealable />
 
         <div class="flex flex-wrap items-center justify-between gap-3">
             <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm font-semibold text-ink">

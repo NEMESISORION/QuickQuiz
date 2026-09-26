@@ -19,7 +19,9 @@ class RegistrationTest extends TestCase
         $this->get(route('register'))
             ->assertOk()
             ->assertViewIs('auth.register')
-            ->assertSeeText('Create your workspace');
+            ->assertSeeText('Create your workspace')
+            ->assertSee('data-password-toggle="password"', false)
+            ->assertSee('data-password-toggle="password_confirmation"', false);
     }
 
     public function test_valid_registration_creates_and_authenticates_the_user(): void

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\LiveSessions\ExpireLiveSession;
 use App\Domain\LiveSessions\JoinLiveSession;
 use App\Domain\LiveSessions\LiveSessionState;
 use App\Enums\LiveSessionStatus;
@@ -31,9 +32,10 @@ class LearnerLiveSessionController extends Controller
             ->with('status', 'You joined the lobby.');
     }
 
-    public function show(Request $request, LiveSession $liveSession, LiveSessionState $liveSessionState): View
+    public function show(Request $request, LiveSession $liveSession, LiveSessionState $liveSessionState, ExpireLiveSession $expireLiveSession): View
     {
         Gate::authorize('viewLearnerLobby', $liveSession);
+        $liveSession = $expireLiveSession->handle($liveSession);
         $learner = $request->user();
         assert($learner instanceof User);
         $participant = $liveSession->participants()
@@ -67,6 +69,7 @@ class LearnerLiveSessionController extends Controller
             'maxScore' => (int) $liveSession->quiz->questions->sum('points'),
             'currentScore' => (int) $participant->responses()->sum('points_awarded'),
             'syncVersion' => $liveSessionState->version($liveSession),
+            'remainingSeconds' => $liveSession->expiresAt() === null ? null : max(0, (int) ceil(now()->diffInSeconds($liveSession->expiresAt(), false))),
         ]);
     }
 }

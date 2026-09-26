@@ -14,6 +14,13 @@
             <p class="mt-3 text-muted">Hosted by {{ $liveSession->host->name }} · Room {{ $liveSession->code }}</p>
         </div>
 
+        @if ($liveSession->status === \App\Enums\LiveSessionStatus::Active)
+            <div class="mt-6 rounded-xl border border-line bg-white px-4 py-3 text-center">
+                <p class="text-xs font-black uppercase tracking-[0.14em] text-muted">Time remaining</p>
+                <p data-live-time data-remaining-seconds="{{ $remainingSeconds }}" class="mt-1 font-mono text-xl font-black text-ink">{{ $remainingSeconds === null ? 'No time limit' : '—' }}</p>
+            </div>
+        @endif
+
         @if ($liveSession->status === \App\Enums\LiveSessionStatus::Waiting)
             <x-ui.panel class="mt-8 p-8 text-center sm:p-12">
                 <span class="mx-auto flex size-16 items-center justify-center rounded-full bg-accent-100 text-2xl font-black text-accent-700" aria-hidden="true">✓</span>
@@ -28,7 +35,7 @@
                 @if ($currentResponse)
                     <div class="mt-8 rounded-2xl border border-green-200 bg-green-50 p-6 text-center"><p class="text-xl font-black text-success">Answer locked</p><p class="mt-2 text-muted">Waiting for the host to reveal the next question.</p></div>
                 @else
-                    <form method="POST" action="{{ route('learner.live-sessions.answer', $liveSession) }}" class="mt-7 flex flex-col gap-3">
+                    <form method="POST" action="{{ route('learner.live-sessions.answer', $liveSession) }}" data-live-answer-form class="mt-7 flex flex-col gap-3">
                         @csrf
                         @foreach ($liveSession->currentQuestion->answerOptions as $option)
                             <label class="flex min-h-16 cursor-pointer items-center gap-4 rounded-2xl border border-line bg-white px-5 py-4 font-bold transition hover:border-brand-300 hover:bg-brand-50 has-checked:border-brand-500 has-checked:bg-brand-50">

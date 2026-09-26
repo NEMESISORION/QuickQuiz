@@ -17,7 +17,9 @@ class AuthenticationTest extends TestCase
         $this->get(route('login'))
             ->assertOk()
             ->assertViewIs('auth.login')
-            ->assertSeeText('Continue your work');
+            ->assertSeeText('Continue your work')
+            ->assertSee('data-password-toggle="password"', false)
+            ->assertSee('aria-label="Show password"', false);
     }
 
     public function test_valid_credentials_authenticate_and_redirect_to_the_intended_page(): void

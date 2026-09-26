@@ -1,5 +1,18 @@
 document.querySelector('[data-print-page]')?.addEventListener('click', () => window.print());
 
+document.querySelectorAll('[data-password-toggle]').forEach((button) => {
+    const input = document.getElementById(button.dataset.passwordToggle);
+    if (!(input instanceof HTMLInputElement)) return;
+
+    button.addEventListener('click', () => {
+        const isVisible = input.type === 'password';
+        input.type = isVisible ? 'text' : 'password';
+        button.textContent = isVisible ? 'Hide' : 'Show';
+        button.setAttribute('aria-label', `${isVisible ? 'Hide' : 'Show'} ${input.labels?.[0]?.textContent?.trim().toLowerCase() || 'password'}`);
+        button.setAttribute('aria-pressed', String(isVisible));
+    });
+});
+
 document.addEventListener('submit', (event) => {
     if (event.defaultPrevented || !(event.target instanceof HTMLFormElement) || !event.target.checkValidity()) return;
 
@@ -67,6 +80,37 @@ document.querySelectorAll('[data-live-session-sync]').forEach((container) => {
         }
     }, 2000);
 
+    window.addEventListener('pagehide', () => window.clearInterval(timer), { once: true });
+});
+
+document.querySelectorAll('[data-live-time]').forEach((display) => {
+    const initialSeconds = display.dataset.remainingSeconds;
+    if (initialSeconds === '') return;
+
+    const seconds = Number(initialSeconds);
+    if (!Number.isFinite(seconds)) return;
+
+    const startedAt = performance.now();
+    const update = () => {
+        const remaining = Math.max(0, seconds - Math.floor((performance.now() - startedAt) / 1000));
+        const hours = Math.floor(remaining / 3600);
+        const minutes = Math.floor((remaining % 3600) / 60);
+        const secondsPart = remaining % 60;
+        display.textContent = remaining === 0
+            ? 'Time up'
+            : hours > 0
+                ? `${hours}:${String(minutes).padStart(2, '0')}:${String(secondsPart).padStart(2, '0')}`
+                : `${minutes}:${String(secondsPart).padStart(2, '0')}`;
+        display.classList.toggle('text-danger', remaining < 60);
+        if (remaining === 0) {
+            display.closest('[data-live-session-sync]')?.querySelectorAll('[data-live-answer-form] input, [data-live-answer-form] button').forEach((field) => {
+                field.disabled = true;
+            });
+        }
+    };
+
+    update();
+    const timer = window.setInterval(update, 1000);
     window.addEventListener('pagehide', () => window.clearInterval(timer), { once: true });
 });
 
